@@ -595,10 +595,37 @@ include 'lang.php';
     </nav>
 
     <div class="navbar_menu-buttons">
-      <a class="button w-button" href="register.php" style="background-color: #ad92de;">
+      <a class="button w-button"
+         href="register.php"
+         style="
+           background:#111827;
+           color:#ffffff;
+           border:1px solid #374151;
+           border-radius:10px;
+           padding:12px 24px;
+           font-weight:600;
+           transition:all .25s ease;
+         "
+         onmouseover="this.style.background='#1F2937'"
+         onmouseout="this.style.background='#111827'"
+      >
         <?= $text_log_in ?>
       </a>
-      <a class="button w-button" href="register.php">
+
+      <a class="button w-button"
+         href="register.php"
+         style="
+           background:#6D28D9;
+           color:#ffffff;
+           border:1px solid #6D28D9;
+           border-radius:10px;
+           padding:12px 24px;
+           font-weight:600;
+           transition:all .25s ease;
+         "
+         onmouseover="this.style.background='#7C3AED'"
+         onmouseout="this.style.background='#6D28D9'"
+      >
         <?= $text_sign_up ?>
       </a>
     </div>
@@ -1630,8 +1657,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /* Кнопка отправки формы */
+    /* Кнопка отправки формы */
     .btn_send {
-      background-color: #5217bf;
+      background-color: #6D28D9;
       border: none;
       padding: 15px;
       color: #fff;
@@ -1644,7 +1672,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* Эффект при наведении на кнопку */
     .btn_send:hover {
-      background-color: #ff6347;
+      background-color: #8B5CF6;
       /* Более светлый оттенок оранжевого */
     }
 
