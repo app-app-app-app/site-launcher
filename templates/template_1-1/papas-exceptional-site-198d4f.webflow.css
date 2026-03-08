@@ -3019,3 +3019,31 @@ figcaption {
     font-size: 12px;
   }
 }
+
+
+
+
+.layout1_content .layout1_content-left,
+.layout1_content .layout-component {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  height: 100% !important;
+}
+
+.layout1_content {
+  align-items: center !important;
+}
+
+.img-flex-item > .layout-component {
+  align-self: center !important;
+}
+
+.heading-style-h1 {
+  font-size: 2.8rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+}
