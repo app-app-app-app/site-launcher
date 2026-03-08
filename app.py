@@ -1779,7 +1779,6 @@ elif st.session_state.step == 3:
                             st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
 
                 st.session_state["archives_ready"] = True
-                st.session_state["needs_rerun"] = True
 
             # --- REVIEW GENERATION ---
             should_autogen_review = (
