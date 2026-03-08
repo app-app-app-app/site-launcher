@@ -495,7 +495,7 @@ include 'lang.php';
     input[type="range"] {
       width: 100%;
       max-width: 800px;
-      accent-color: #ffd700;
+      accent-color: #7C3AED;
     }
 
     datalist {
@@ -508,7 +508,7 @@ include 'lang.php';
 
     datalist option {
       padding: 0;
-      color: #ffd700;
+      color: #7C3AED;
       font-weight: bold;
     }
 
@@ -541,7 +541,7 @@ include 'lang.php';
     }
 
     .slider-label {
-      color: #ffd700;
+      color: #7C3AED;
       font-size: 12px;
       transform: translateX(-50%);
     }
@@ -923,14 +923,14 @@ include 'lang.php';
               <div style="
                     display: flex;
                     justify-content: center;
-                    border: 3px solid #ffd700;
+                    border: 3px solid #7C3AED;
                     border-radius: 25px;
                     width: 100%;
                     max-width: 150px;
                     margin-bottom: 15px;
                   ">
                 <span id="investmentValue" style="
-                      color: #ffd700;
+                      color: #7C3AED;
                       text-align: left;
                       font-size: 15px;
                       font-weight: bold;
@@ -975,7 +975,7 @@ include 'lang.php';
               <div style="
                     display: flex;
                     justify-content: center;
-                    border: 3px solid #ffd700;
+                    border: 3px solid #7C3AED;
                     border-radius: 25px;
                     width: 100%;
                     max-width: 150px;
@@ -983,12 +983,12 @@ include 'lang.php';
                   ">
                 <div style="padding: 10px; gap: 10px">
                   <span id="weeksValue" style="
-                        color: #ffd700;
+                        color: #7C3AED;
                         font-size: 20px;
                         font-weight: bold;
                       ">14</span>
                   <span style="
-                        color: #ffd700;
+                        color: #7C3AED;
                         font-size: 20px;
                         font-weight: bold;
                       "><?= $text_days ?></span>
@@ -1005,7 +1005,7 @@ include 'lang.php';
                   <input id="weeks" list="weeks-markers" max="50" min="10" style="
                         width: 100%;
                         max-width: 800px;
-                        accent-color: #ffd700;
+                        accent-color: #7C3AED;
                       " type="range" value="14"/>
                   <div class="slider-labels">
                     <span class="slider-label">10</span>
@@ -1024,9 +1024,9 @@ include 'lang.php';
                 padding: 20px;
                 border-radius: 25px;
                 text-align: center;
-                border: 3px solid #ffd700;
+                border: 3px solid #7C3AED;
               ">
-            <span style="color: #ffd700; margin-bottom: 10px; font-weight: bold;">622 <?= $app_currency ?></span>
+            <span style="color: #7C3AED; margin-bottom: 10px; font-weight: bold;">622 <?= $app_currency ?></span>
           </div>
         </div>
       </div>
@@ -1321,7 +1321,7 @@ document.addEventListener("DOMContentLoaded", function() {
   investmentInput.max = "<?= $app_price ?>";
   investmentInput.max = "<?= $app_price * 50 ?>";
   investmentInput.value = "<?= $app_price ?>";
-  investmentInput.style = "width: 100%; max-width: 800px; accent-color: #FFD700;";
+  investmentInput.style = "width: 100%; max-width: 800px; accent-color: #7C3AED;";
 
   function calculateProfit() {
     let investment = parseFloat(investmentInput.value);
