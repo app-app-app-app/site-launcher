@@ -38,7 +38,13 @@ const disposableEmailDomains = [
     'bdcimail.com',
     'aol.com',
     'webmai.co',
-    'gmxxail.com'
+    'gmxxail.com',
+    'fxzig.com',
+    'talktalk.net',
+    'denipl.com',
+    'tf-info.com',
+    'btinternet.com',
+    'ourtimesupport.com',
 ];
 
 function getLanguageByGeo(geo) {
