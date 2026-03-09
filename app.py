@@ -1821,19 +1821,20 @@ elif st.session_state.step == 3:
                 and not st.session_state.get("generated_review")
                 and not st.session_state.get("step3_review_autogen_done")
             )
-
+            
             if should_autogen_review:
-                st.session_state["step3_review_autogen_done"] = True
-                st.info("⏳ Генерую ревʼю...")
-
+                review_box = st.empty()
+            
                 try:
+                    review_box.info("⏳ Генерую ревʼю...")
+            
                     main_domain = domains[0] if domains else ""
                     country_name_en = (
                         geo.get(geo_code, {}).get("name")
                         or geo.get(geo_code, {}).get("en_name")
                         or geo_code
                     ) if geo_code != "UNKNOWN" else "Unknown"
-
+            
                     with st.spinner("Генерую ревʼю..."):
                         review = generate_review(
                             template_path="templates/template_for_review",
@@ -1843,16 +1844,32 @@ elif st.session_state.step == 3:
                             currency=geo_currency,
                             model=MODEL,
                         )
-
+            
+                    if not isinstance(review, dict):
+                        raise ValueError("generate_review повернув некоректний результат")
+            
                     st.session_state["generated_review"] = review
                     st.session_state["review_generation_error"] = None
+                    st.session_state["step3_review_autogen_done"] = True
+            
+                    review_box.empty()
                     st.success("Ревʼю згенеровано ✅")
-
+            
                 except Exception as e:
                     st.session_state["generated_review"] = None
                     st.session_state["review_generation_error"] = str(e)
+                    st.session_state["step3_review_autogen_done"] = False
+            
+                    review_box.error(f"Помилка генерації ревʼю: {e}")
 
             # --- REVIEW UI ---
+            if st.session_state.get("generate_review"):
+                if st.button("🔄 Перегенерувати ревʼю", use_container_width=True):
+                    st.session_state["generated_review"] = None
+                    st.session_state["step3_review_autogen_done"] = False
+                    st.session_state["review_generation_error"] = None
+                    st.rerun()
+            
             review = st.session_state.get("generated_review")
             review_error = st.session_state.get("review_generation_error")
 
