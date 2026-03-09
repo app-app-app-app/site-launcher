@@ -57,7 +57,6 @@ include 'lang.php';
 <link rel="shortcut icon" href="./favicon.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
 <link rel="manifest" href="site.webmanifest" />
-  <link rel="alternate" hreflang="<?= $site_lang ?>" href="https://<?= $domain ?>/it/" />
   <style>
     .wf-force-outline-none[tabindex="-1"]:focus {
       outline: none;
