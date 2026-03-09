@@ -1859,49 +1859,47 @@ elif st.session_state.step == 3:
                     st.session_state["generated_review"] = None
                     st.session_state["review_generation_error"] = str(e)
                     st.session_state["step3_review_autogen_done"] = False
-            
                     review_box.error(f"Помилка генерації ревʼю: {e}")
-
+            
             # --- REVIEW UI ---
-            if st.session_state.get("generate_review"):
-                if st.button("🔄 Перегенерувати ревʼю", use_container_width=True):
+            review = st.session_state.get("generated_review")
+            review_error = st.session_state.get("review_generation_error")
+            
+            if (
+                st.session_state.get("generate_review")
+                or review
+                or review_error
+            ):
+                st.divider()
+                st.markdown("### 📝 Ревʼю")
+            
+                if review_error:
+                    st.error(review_error)
+            
+                elif isinstance(review, dict):
+                    st.text_input("H1", value=review.get("h1", ""), key="review_h1_view")
+                    copy_button(review.get("h1", ""), "📋 Скопіювати H1", key="copy_review_h1")
+            
+                    st.text_input("Title", value=review.get("title", ""), key="review_title_view")
+                    copy_button(review.get("title", ""), "📋 Скопіювати Title", key="copy_review_title")
+            
+                    st.text_area("Description", value=review.get("description", ""), height=100, key="review_desc_view")
+                    copy_button(review.get("description", ""), "📋 Скопіювати Description", key="copy_review_desc")
+            
+                    st.text_input("Slug", value=review.get("slug", ""), key="review_slug_view")
+                    copy_button(review.get("slug", ""), "📋 Скопіювати Slug", key="copy_review_slug")
+            
+                    st.text_area("HTML", value=review.get("html", ""), height=650, key="review_html_view")
+                    copy_button(review.get("html", ""), "📋 Скопіювати HTML", key="copy_review_html")
+            
+                else:
+                    st.info("Ревʼю ще не згенеровано або генерація не завершилась.")
+            
+                if st.button("🔁 Перегенерувати ревʼю", use_container_width=True):
                     st.session_state["generated_review"] = None
                     st.session_state["step3_review_autogen_done"] = False
                     st.session_state["review_generation_error"] = None
                     st.rerun()
-            
-            review = st.session_state.get("generated_review")
-            review_error = st.session_state.get("review_generation_error")
-
-            if st.session_state.get("generate_review"):
-                st.divider()
-                st.markdown("### 📝 Ревʼю")
-
-                if review_error:
-                    st.error(review_error)
-
-                elif isinstance(review, dict):
-                    st.text_input("H1", value=review.get("h1", ""), key="review_h1_view")
-                    copy_button(review.get("h1", ""), "📋 Скопіювати H1", key="copy_review_h1")
-
-                    st.text_input("Title", value=review.get("title", ""), key="review_title_view")
-                    copy_button(review.get("title", ""), "📋 Скопіювати Title", key="copy_review_title")
-
-                    st.text_area("Description", value=review.get("description", ""), height=100, key="review_desc_view")
-                    copy_button(review.get("description", ""), "📋 Скопіювати Description", key="copy_review_desc")
-
-                    st.text_input("Slug", value=review.get("slug", ""), key="review_slug_view")
-                    copy_button(review.get("slug", ""), "📋 Скопіювати Slug", key="copy_review_slug")
-
-                    st.text_area("HTML", value=review.get("html", ""), height=650, key="review_html_view")
-                    copy_button(review.get("html", ""), "📋 Скопіювати HTML", key="copy_review_html")
-
-                    if st.button("🔁 Перегенерувати ревʼю", use_container_width=True):
-                        st.session_state["generated_review"] = None
-                        st.session_state["step3_review_autogen_done"] = False
-                        st.session_state["review_generation_error"] = None
-                        st.rerun()                
-
 
 
 # ---------------------------
