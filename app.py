@@ -875,6 +875,7 @@ def decision_go():
     st.session_state.step2_autocheck_done = False
     st.session_state.step3_autogen_done = False
     st.session_state.generated_files = []
+    st.session_state["generated_site_zips"] = {}
     st.session_state.pop("last_generation_time", None)
 
 
@@ -1171,13 +1172,24 @@ def step2_continue():
     if len(st.session_state.chosen_domains) != k:
         st.toast(f"Потрібно обрати рівно {k} домен(и).", icon="⚠️")
         return
+
     st.session_state.step2_done = True
     st.session_state.step = 3
     st.session_state.needs_rerun = True
-    st.session_state.step3_autogen_done = False
-    st.session_state.generated_files = []
-    st.session_state.pop("last_generation_time", None)
 
+    # скидаємо генерацію lang.php
+    st.session_state["step3_autogen_done"] = False
+    st.session_state["generated_files"] = []
+    st.session_state["last_generation_time"] = None
+    st.session_state["archives_ready"] = False
+    st.session_state["generated_site_zips"] = {}
+
+    # скидаємо ревʼю
+    st.session_state["generated_review"] = None
+    st.session_state["step3_review_autogen_done"] = False
+    st.session_state["review_generation_error"] = None
+
+    st.rerun()
 
 
 def copy_domain(domain: str):
@@ -1446,24 +1458,15 @@ elif st.session_state.step == 2:
         st.button("🧹 Очистити вибір", on_click=clear_domains, use_container_width=True)
         st.divider()
         st.checkbox("Сформувати ревʼю", key="generate_review")
-        if st.button(
+
+        st.button(
             "➡️ Далі до Кроку 3",
             type="primary",
             disabled=(len(st.session_state.chosen_domains) != int(st.session_state.sites_count)),
-            use_container_width=True
-        ):
-            st.session_state.step = 3
-        
-            # скидаємо автогенерацію
-            st.session_state["step3_autogen_done"] = False
-            st.session_state["generated_files"] = []
-            st.session_state["last_generation_time"] = None
-            st.session_state["archives_ready"] = False
-            st.session_state["generated_review"] = None
-            st.session_state["step3_review_autogen_done"] = False
-            st.session_state["review_generation_error"] = None
-        
-            st.rerun()
+            use_container_width=True,
+            on_click=step2_continue,
+        )
+
 
     with right:
         st.markdown("### Список доменів")
@@ -1664,6 +1667,7 @@ elif st.session_state.step == 3:
 
                     except Exception as e:
                         st.session_state["generated_files"] = []
+                        st.session_state["step3_autogen_done"] = False
                         status.error("Помилка генерації ❌")
                         st.error(str(e))
 
@@ -1759,22 +1763,52 @@ elif st.session_state.step == 3:
                     for i, item in enumerate(files):
                         domain = item["domain"]
                         try:
-                            site_zip = build_domain_site_zip(
-                                domain=domain,
-                                site_template_dir=domain_to_template_dir.get(domain, TEMPLATES["template_1"]["dir"]),
-                                lang_php_content=item["content"],
-                                target_lang=target_lang,
-                                geo_code=geo_code.lower(),
-                                brand=brand,
-                            )
-                            st.download_button(
-                                label=f"⬇️ Завантажити сайт для {domain} (.zip)",
-                                data=site_zip,
-                                file_name=f"{domain}.zip",
-                                mime="application/zip",
-                                use_container_width=True,
-                                key=f"download_site_zip_{i}_{domain}",
-                            )
+                            # 1 раз ініціалізуємо сховище архівів у session_state
+                            if "generated_site_zips" not in st.session_state:
+                                st.session_state["generated_site_zips"] = {}
+                            
+                            domain_to_template_dir = {}
+                            for i, d in enumerate(domains):
+                                tpl_id = dt.get(d) or ("template_1" if i % 2 == 0 else "template_2")
+                                domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
+                            
+                            _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
+                            _missing = [p for p in _need_dirs if not os.path.isdir(p)]
+                            if _missing:
+                                st.error("Не знайдено папки шаблонів: " + ", ".join(_missing))
+                            else:
+                                for i, item in enumerate(files):
+                                    domain = item["domain"]
+                            
+                                    try:
+                                        # Генеруємо zip тільки якщо його ще нема в session_state
+                                        if domain not in st.session_state["generated_site_zips"]:
+                                            st.session_state["generated_site_zips"][domain] = build_domain_site_zip(
+                                                domain=domain,
+                                                site_template_dir=domain_to_template_dir.get(
+                                                    domain,
+                                                    TEMPLATES["template_1"]["dir"]
+                                                ),
+                                                lang_php_content=item["content"],
+                                                target_lang=target_lang,
+                                                geo_code=geo_code.lower(),
+                                                brand=brand,
+                                            )
+                            
+                                        st.download_button(
+                                            label=f"⬇️ Завантажити сайт для {domain} (.zip)",
+                                            data=st.session_state["generated_site_zips"][domain],
+                                            file_name=f"{domain}.zip",
+                                            mime="application/zip",
+                                            use_container_width=True,
+                                            key=f"download_site_zip_{i}_{domain}",
+                                            on_click="ignore",
+                                        )
+                            
+                                    except Exception as e:
+                                        st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
+                            
+                            st.session_state["archives_ready"] = True
                         except Exception as e:
                             st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
 
