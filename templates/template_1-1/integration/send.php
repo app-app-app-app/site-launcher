@@ -3,15 +3,6 @@ session_start();
 require_once 'config.php';
 require_once 'helpers.php';
 
-if (empty($_POST['js_token']) || $_POST['js_token'] !== $_SESSION['js_token']) {
-    http_response_code(403);
-    exit('JavaScript must be enabled to submit the form.');
-}
-
-if (!empty($_POST['website']) || !empty($_POST['company'])) {
-    http_response_code(403);
-    exit('Spam detected.');
-}
 
 $phone = preg_replace('/[^0-9+]/', '', getPost('fullphone'));
 $country = strtolower(getPost('country'));
