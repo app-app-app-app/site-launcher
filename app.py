@@ -610,18 +610,35 @@ def _lang_name_ua(lang_code: str) -> str:
 def _build_tsv_row(brand: str, geo_code: str, lang_code: str, domains: list[str]) -> str:
     """TSV rows for copy-paste into Sheets/Excel.
 
-    If multiple domains are selected, returns MULTILINE TSV:
-      Brand<TAB>Geo<TAB>Lang<TAB>Domain
+    Brand<TAB>Geo<TAB>Lang<TAB>Domain<TAB>Template<TAB>Review
     """
+
     brand = (brand or "").strip()
     geo_name = _geo_name_ua(geo_code or "UNKNOWN")
     lang = _lang_name_ua(lang_code)
 
     ds = [d.strip() for d in (domains or []) if d and d.strip()]
-    if not ds:
-        return f"{brand}	{geo_name}	{lang}	-"
 
-    return "\n".join(f"{brand}	{geo_name}	{lang}	{d}" for d in ds)
+    # чи генерується ревʼю
+    review_flag = "Так" if st.session_state.get("generate_review") else "Ні"
+
+    # шаблони для доменів
+    domain_templates = st.session_state.get("domain_templates", {})
+
+    if not ds:
+        return f"{brand}\t{geo_name}\t{lang}\t-\t-\t{review_flag}"
+
+    rows = []
+
+    for d in ds:
+        tpl_id = domain_templates.get(d, "template_1")
+        tpl_label = TEMPLATES.get(tpl_id, {}).get("label", tpl_id)
+
+        rows.append(
+            f"{brand}\t{geo_name}\t{lang}\t{d}\t{tpl_label}\t{review_flag}"
+        )
+
+    return "\n".join(rows)
 
 def _set_geo_widget_to_code(cc: str | None):
     if not cc:
