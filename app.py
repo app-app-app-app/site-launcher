@@ -859,17 +859,26 @@ def apply_detect():
     cc = st.session_state.detect_geo
     lang = st.session_state.detect_lang
 
-    # Якщо визначили geo — застосовуємо geo + дефолтну мову країни
+    # Є geo + мова -> застосовуємо ОБИДВА значення
     if cc and cc in geo:
         _set_geo_widget_to_code(cc)
         st.session_state.geo_code = cc
 
-        default_bcp47 = geo[cc]["lang"]
-        default_base = default_bcp47.split("-")[0]
-        _set_lang_widget_to_base(default_base)
-        st.session_state.target_lang = default_bcp47
+        if lang:
+            _set_lang_widget_to_base(lang)
+            st.session_state.target_lang = bcp47_from(
+                lang,
+                cc,
+                st.session_state.use_region
+            )
+        else:
+            # fallback: дефолтна мова країни, якщо мову не визначили
+            default_bcp47 = geo[cc]["lang"]
+            default_base = default_bcp47.split("-")[0]
+            _set_lang_widget_to_base(default_base)
+            st.session_state.target_lang = default_bcp47
 
-    # Якщо geo нема, але є мова — UNKNOWN geo + мова base
+    # Є лише мова, але нема geo
     elif lang:
         _set_geo_widget_to_code(None)
         _set_lang_widget_to_base(lang)
@@ -877,7 +886,6 @@ def apply_detect():
         st.session_state.target_lang = lang
 
     st.session_state.needs_rerun = True
-
 
 def mark_serp_checked():
     st.session_state.serp_checked = True
