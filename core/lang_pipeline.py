@@ -368,63 +368,99 @@ def _generate_specials_via_llm(
 ) -> Dict[str, str]:
 
     system = (
-        "Ти SEO-копірайтер для офіційної криптоплатформи. "
+        "Ти SEO-копірайтер для AI-trading / trading platform лендингів. "
         "Поверни ТІЛЬКИ JSON. Без пояснень. "
-        "Усі тексти ПОВИННІ бути повністю мовою target_lang. "
-        "Заборонено міксувати мови."
+        "Усі тексти мають бути ПОВНІСТЮ мовою target_lang. "
+        "Стиль: короткий, рекламний, природний, схожий на native SEO. "
+        "Пріоритетні теми: trading platform, AI trading, market analysis, trading signals, algorithms. "
+        "Не зловживай словами про investment/returns/profits. "
+        "Уникай стилю crypto hype, financial promises, exaggerated claims."
     )
 
     payload = {
         "target_language": target_lang,
+        "country_code": cc,
         "source_placeholder": "$source",
         "requirements": {
-    
             "title": {
-                "length_min": 60,
-                "length_max": 100,
-                "must_start_with": "$source —",
-                "must_signal_trust": True,
-                "must_say_official": True,
-                "tone": "professional, authoritative, trustworthy",
-                "examples": [
-                    "$source — Official Cryptocurrency Trading Platform with AI",
-                    "$source — Oficjalna platforma handlu kryptowalutami z AI",
-                    "$source — Plataforma Oficial de Trading Cripto con Inteligencia Artificial"
-                ]
-            },
-    
-            "description": {
-                "length_min": 140,
-                "length_max": 160,
-                "must_start_with": "$source —",
-                "must_include_keywords": [
-                    "AI",
-                    "autopilot",
-                    "security",
-                    "stable results"
+                "patterns": [
+                    "$source | {phrase}",
+                    "$source 2026 | {phrase}",
+                    "{phrase} – $source"
                 ],
-                "trust_markers": {
-                    "must_include_at_least": 3,
-                    "use_as_natural_words_not_list": True,
-                    "examples": ["official", "trusted", "verified", "secure", "fast payouts", "capital protection"]
-                },
-                "emoji_rules": {
-                    "exact_count": 4,
-                    "allowed_priority": ["⭐", "⚡", "🔥", "🚀", "✅", "🔒"],
-                    "placement_rule": "place emojis only AFTER punctuation marks (., !, :) and never inside words",
-                    "must_be_evenly_spread": True
-                },
-                "cta_required": True,
-                "cta_examples": [
-                    "Join now",
-                    "Start today",
-                    "Приєднуйтесь",
-                    "Почніть вже сьогодні",
-                    "Zacznij już dziś",
-                    "Commencez dès aujourd’hui"
+                "length_min": 42,
+                "length_max": 68,
+                "style": "short, native, SEO-friendly, promotional but clean",
+                "prefer_topics": [
+                    "AI trading platform",
+                    "market analysis",
+                    "trading signals",
+                    "AI algorithms",
+                    "smart trading",
+                    "trading hub"
+                ],
+                "avoid_topics": [
+                    "crypto",
+                    "cryptocurrency",
+                    "autopilot",
+                    "passive income",
+                    "fast payouts",
+                    "capital protection",
+                    "guaranteed returns"
+                ],
+                "examples_style_only": [
+                    "$source | Plataforma de trading con IA",
+                    "$source 2026 | Trading con IA y análisis de mercados",
+                    "$source | Hub de trading con inteligencia artificial",
+                    "Trading inteligente con IA – $source"
                 ]
             },
-    
+            "description": {
+                "length_min": 125,
+                "length_max": 158,
+                "must_start_with_source": True,
+                "style": "clean landing page SEO description",
+                "preferred_structure": [
+                    "$source + 1 emoji + short platform description",
+                    "benefit/value",
+                    "1 more emoji near benefit or CTA",
+                    "soft CTA"
+                ],
+                "prefer_topics": [
+                    "AI trading platform",
+                    "market analysis",
+                    "signals",
+                    "algorithms",
+                    "tools for traders",
+                    "real-time analysis"
+                ],
+                "avoid_topics": [
+                    "guaranteed profits",
+                    "maximize returns",
+                    "passive income",
+                    "risk-free",
+                    "mobile app",
+                    "start in minutes",
+                    "free trial",
+                    "autopilot"
+                ],
+                "emoji_rules": {
+                    "min_count": 2,
+                    "max_count": 2,
+                    "allowed": ["⭐", "⚡", "🔥", "🚀", "✅", "💰", "➡️"],
+                    "placement": [
+                        "one emoji right after $source",
+                        "one emoji after a benefit phrase",
+                        "never cluster emojis together",
+                        "never put both emojis at the end"
+                    ]
+                },
+                "examples_style_only": [
+                    "$source ⭐ — plataforma de trading con IA y señales en tiempo real ⚡ Descubre herramientas modernas para seguir el mercado con más claridad.",
+                    "$source ✅ — hub de trading con inteligencia artificial para análisis de mercado 🔥 Únete a traders que buscan señales y datos en tiempo real.",
+                    "$source 🚀 — plataforma de IA para analizar mercados y detectar señales ⭐ Explora una forma más moderna de seguir oportunidades de trading."
+                ]
+            },
             "address": {
                 "type": "realistic full address",
                 "must_include": [
@@ -436,7 +472,6 @@ def _generate_specials_via_llm(
                 ],
                 "must_match_country_code": True
             },
-    
             "personas": {
                 "count": 4,
                 "format_strict": "STRING ONLY",
@@ -462,8 +497,7 @@ def _generate_specials_via_llm(
     desc = str(data.get("description", "")).strip()
     raw_address = data.get("address", "")
     address = str(raw_address).strip()
-    
-    # якщо address прилетів dict або json-like string — конвертуємо у красиву строку
+
     if isinstance(raw_address, dict):
         address = _format_address_from_obj(raw_address) or address
     else:
@@ -473,6 +507,302 @@ def _generate_specials_via_llm(
 
     personas = data.get("personas", [])
 
+    allowed_emoji = "⭐⚡🔥🚀✅💰➡️"
+
+    def _base_lang(lang: str) -> str:
+        return (lang or "en").split("-")[0].split("_")[0].lower()
+
+    def _title_fallback(lang: str) -> str:
+        base = _base_lang(lang)
+        if base == "es":
+            return "$source | Plataforma de trading con IA"
+        if base == "it":
+            return "$source | Piattaforma di trading con AI"
+        if base == "fr":
+            return "$source | Plateforme de trading avec IA"
+        if base == "de":
+            return "$source | KI-Trading-Plattform"
+        if base == "pt":
+            return "$source | Plataforma de trading com IA"
+        if base == "pl":
+            return "$source | Platforma tradingowa AI"
+        if base == "uk":
+            return "$source | Платформа AI-трейдингу"
+        return "$source | AI Trading Platform"
+
+    def _desc_fallback(lang: str) -> str:
+        base = _base_lang(lang)
+        if base == "es":
+            return "$source ⭐ — plataforma de trading con IA y análisis de mercado en tiempo real ⚡ Descubre señales y herramientas modernas para seguir el mercado."
+        if base == "it":
+            return "$source ⭐ — piattaforma di trading con AI e analisi di mercato in tempo reale ⚡ Scopri segnali e strumenti moderni per seguire il mercato."
+        if base == "fr":
+            return "$source ⭐ — plateforme de trading avec IA et analyse de marché en temps réel ⚡ Découvrez des signaux et outils modernes pour suivre le marché."
+        if base == "de":
+            return "$source ⭐ — KI-Trading-Plattform mit Marktanalyse in Echtzeit ⚡ Entdecke Signale und moderne Tools, um den Markt besser zu verfolgen."
+        if base == "pt":
+            return "$source ⭐ — plataforma de trading com IA e análise de mercado em tempo real ⚡ Descubra sinais e ferramentas modernas para acompanhar o mercado."
+        if base == "pl":
+            return "$source ⭐ — platforma tradingowa AI z analizą rynku w czasie rzeczywistym ⚡ Poznaj sygnały i nowoczesne narzędzia do śledzenia rynku."
+        if base == "uk":
+            return "$source ⭐ — платформа AI-трейдингу з аналізом ринку в реальному часі ⚡ Відкрийте сигнали та сучасні інструменти для роботи з ринком."
+        return "$source ⭐ — AI trading platform with real-time market analysis ⚡ Discover signals and modern tools to follow the market more effectively."
+
+    def _clean_spaces(s: str) -> str:
+        s = re.sub(r"\s+", " ", s or "").strip()
+        s = re.sub(r"\s+([,.;:!?])", r"\1", s)
+        return s
+
+    def _normalize_dash_after_source(s: str) -> str:
+        s = re.sub(r"^\$source\s*[—–\-:|]\s*", "$source ⭐ — ", s, flags=re.IGNORECASE)
+        return s
+
+    def _remove_disallowed_phrases(s: str) -> str:
+        bad_patterns = [
+            r"\bautopilot\b",
+            r"\bcrypto(currency)?\b",
+            r"\bsecure payouts?\b",
+            r"\bfast payouts?\b",
+            r"\bcapital protection\b",
+            r"\bguaranteed returns?\b",
+            r"\bmaximize (your )?returns?\b",
+            r"\bmaximiza (tus )?retornos\b",
+            r"\bretornos\b",
+            r"\bpassive income\b",
+            r"\brisk[- ]?free\b",
+            r"\bfree trial\b",
+            r"\bprueba gratis\b",
+            r"\bstart in minutes\b",
+            r"\bempezar en minutos\b",
+            r"\bdesde el móvil\b",
+            r"\bmobile\b",
+            r"\bapp\b",
+        ]
+        out = s
+        for p in bad_patterns:
+            out = re.sub(p, "", out, flags=re.IGNORECASE)
+        out = re.sub(r"\s{2,}", " ", out)
+        out = re.sub(r"\s+([,.;:!?])", r"\1", out)
+        return out.strip(" ,;:-")
+
+    def _remove_emoji_clusters(s: str) -> str:
+        # ⭐⚡ -> лишаємо першу, другу прибираємо
+        s = re.sub(rf"([{allowed_emoji}])\s*([{allowed_emoji}])+", r"\1", s)
+        return s
+
+    def _extract_emojis(s: str) -> list[str]:
+        return re.findall(rf"[{allowed_emoji}]", s or "")
+
+    def _remove_all_allowed_emojis(s: str) -> str:
+        return re.sub(rf"[{allowed_emoji}]", "", s or "")
+
+    def _ensure_title_shape(s: str, lang: str) -> str:
+        s = _clean_spaces(s)
+        s = _remove_disallowed_phrases(s)
+
+        if "$source" not in s:
+            return _title_fallback(lang)
+
+        # прибираємо зайві емодзі з title
+        s = _remove_all_allowed_emojis(s)
+        s = _clean_spaces(s)
+
+        patterns = [
+            r"^\$source\s*\|\s*.+$",
+            r"^\$source\s+2026\s*\|\s*.+$",
+            r"^.+\s+[–-]\s+\$source$",
+        ]
+        if not any(re.match(p, s) for p in patterns):
+            tail = s.replace("$source", "").strip(" |-–—:;,.")
+            if not tail:
+                return _title_fallback(lang)
+            s = f"$source | {tail}"
+
+        # легке підчищення від investment-style, але без жорсткої заборони
+        replace_map = {
+            r"\bInversión automática\b": "Trading con IA",
+            r"\bInversión con IA\b": "Trading con IA",
+            r"\bAutomatic investment\b": "AI Trading",
+            r"\bInvestimento automatico\b": "Trading con AI",
+        }
+        for pat, repl in replace_map.items():
+            s = re.sub(pat, repl, s, flags=re.IGNORECASE)
+
+        s = _clean_spaces(s)
+
+        if len(s) < 42:
+            return _title_fallback(lang)
+        if len(s) > 68:
+            s = s[:68].rstrip(" ,;:-|")
+            if "$source" not in s:
+                return _title_fallback(lang)
+
+        return s
+
+    def _ensure_two_emojis_spread(s: str) -> str:
+        s = _remove_emoji_clusters(s)
+        emojis = _extract_emojis(s)
+
+        # прибираємо зайві, залишаємо максимум 2
+        if len(emojis) > 2:
+            kept = 0
+            out = []
+            for ch in s:
+                if re.match(rf"[{allowed_emoji}]", ch):
+                    kept += 1
+                    if kept > 2:
+                        continue
+                out.append(ch)
+            s = "".join(out)
+
+        emojis = _extract_emojis(s)
+
+        if len(emojis) == 0:
+            if "$source" in s:
+                s = s.replace("$source", "$source ⭐", 1)
+            if "." in s:
+                s = s.replace(".", " ⚡.", 1)
+            else:
+                s += " ⚡"
+            return s
+
+        if len(emojis) == 1:
+            # якщо є emoji біля $source, другу ставимо ближче до вигоди
+            if "." in s:
+                first_dot = s.find(".")
+                if first_dot != -1:
+                    s = s[:first_dot] + " ⚡" + s[first_dot:]
+                else:
+                    s += " ⚡"
+            else:
+                s += " ⚡"
+
+        return s
+
+    def _ensure_desc_shape(s: str, lang: str) -> str:
+        s = _clean_spaces(s)
+        s = _remove_disallowed_phrases(s)
+
+        if "$source" not in s:
+            s = _desc_fallback(lang)
+
+        if not s.startswith("$source"):
+            s = re.sub(r"^.*?\$source", "$source", s)
+            if not s.startswith("$source"):
+                s = "$source — " + s.lstrip("—-:| ")
+
+        s = _normalize_dash_after_source(s)
+        s = _clean_spaces(s)
+
+        # прибираємо емодзі не з whitelist
+        s = re.sub(r"[📈📉💸💵💶💷]", "", s)
+
+        # якщо модель пішла занадто в investment angle, підтягуємо назад до trading/platform
+        rewrites = {
+            r"\binvertir automáticamente con inteligencia artificial\b": "plataforma de trading con inteligencia artificial",
+            r"\binversión automática con inteligencia artificial\b": "trading con inteligencia artificial",
+            r"\bautomatic investment with artificial intelligence\b": "AI trading platform",
+            r"\binvestimento automatico con intelligenza artificiale\b": "piattaforma di trading con intelligenza artificiale",
+        }
+        for pat, repl in rewrites.items():
+            s = re.sub(pat, repl, s, flags=re.IGNORECASE)
+
+        s = _ensure_two_emojis_spread(s)
+        s = _clean_spaces(s)
+
+        # якщо CTA зовсім дивний/агресивний — м'який fallback
+        if re.search(r"\b(prueba gratis|free trial|maximiza|retornos|risk-free|guaranteed)\b", s, flags=re.IGNORECASE):
+            s = _desc_fallback(lang)
+
+        if len(s) < 125:
+            s = _desc_fallback(lang)
+
+        if len(s) > 158:
+            s = s[:158].rstrip(" ,;:-")
+            # після обрізки якщо загубилась логіка — fallback
+            if "$source" not in s or len(_extract_emojis(s)) < 2:
+                s = _desc_fallback(lang)
+
+        # фінальна страховка: рівно 2 whitelist-емодзі, без кластерів
+        s = _remove_emoji_clusters(s)
+        s = _ensure_two_emojis_spread(s)
+        s = _clean_spaces(s)
+
+        return s
+
+    def _format_persona(name: str, age: str, city: str, target_lang: str) -> str:
+        base = (target_lang.split("-")[0] if target_lang else "en").lower()
+        try:
+            age_i = int(float(age))
+        except Exception:
+            age_i = random.randint(31, 49)
+
+        if base == "uk":
+            word = "рік" if age_i % 10 == 1 and age_i % 100 != 11 else "роки"
+            return f"{name or 'Олександр'}, {age_i} {word}, {city or 'Київ'}"
+        if base == "de":
+            return f"{name or 'Leon'}, {age_i} Jahre, {city or 'Stuttgart'}"
+        if base == "pl":
+            return f"{name or 'Jan'}, {age_i} lat, {city or 'Warszawa'}"
+        if base == "cs":
+            return f"{name or 'Jan'}, {age_i} let, {city or 'Praha'}"
+        if base == "es":
+            return f"{name or 'Lucía'}, {age_i} años, {city or 'Madrid'}"
+        if base == "it":
+            return f"{name or 'Tommaso'}, {age_i} anni, {city or 'Milano'}"
+        if base == "fr":
+            return f"{name or 'Camille'}, {age_i} ans, {city or 'Paris'}"
+        return f"{name or 'Alex'}, {age_i} years, {city or 'London'}"
+
+    def _persona_to_text(p, target_lang: str) -> str:
+        if isinstance(p, dict):
+            name = str(p.get("name", "")).strip()
+            age = str(p.get("age", "")).strip()
+            city = str(p.get("city", "")).strip()
+            if name:
+                name = name.split()[0]
+            return _format_persona(name, age, city, target_lang)
+
+        s = str(p).strip()
+        if not s:
+            return ""
+
+        if s.startswith("{") and "name" in s and "city" in s:
+            return ""
+
+        # залишаємо тільки ім'я без прізвища
+        s = re.sub(r"^([^\s,]+)\s+[^\s,]+", r"\1", s)
+        return s
+
+    title = _ensure_title_shape(title, target_lang)
+    desc = _ensure_desc_shape(desc, target_lang)
+
+    if not isinstance(personas, list):
+        personas = []
+
+    clean = []
+    for p in personas:
+        txt = _persona_to_text(p, target_lang)
+        if txt:
+            clean.append(txt)
+
+    while len(clean) < 4:
+        clean.append(_format_persona("", "", "", target_lang))
+
+    personas = clean[:4]
+
+    if not address:
+        address = f"Main Street 10, 10000 Capital City, {cc}"
+
+    return {
+        "adress_name": address,
+        "feedback_strong_1": personas[0],
+        "feedback_strong_2": personas[1],
+        "feedback_strong_3": personas[2],
+        "feedback_strong_4": personas[3],
+        "page_title_main": title,
+        "page_description_main": desc,
+    }
     
 
     def _norm_source_dash(s: str) -> str:
@@ -1068,11 +1398,20 @@ def _generate_template2_manual_via_llm(
         "rules": [
             "hero_main_heading should mean 'Earn over' / 'Make over' in the target language (short).",
             "hero_main_highlight must include the currency symbol/code AND the hero_amount number. Keep it punchy, like '€950 DAILY'.",
-            "main_title should be similar to: '$source | Automated AI investing for modern investors' but localized and unique.",
-            "main_description must be localized and unique, similar length to the template's original main_description (roughly 2–3 short lines). It MUST include the brand name exactly as provided. Add 1–2 tasteful, context-appropriate emojis (not at the start of every sentence, no emoji spam). Keep it natural and marketing-friendly.",
+            "main_title must follow ONE of these patterns only: '$source | {phrase}', '$source 2026 | {phrase}', or '{phrase} – $source'.",
+            "main_title must be 42-68 characters long, localized, natural, and focused on AI trading / trading platform / market analysis / signals / algorithms.",
+            "Prefer words equivalent to: trading platform, AI trading, market analysis, signals, smart trading, trading hub.",
+            "Avoid words equivalent to: automated investing, modern investors, passive income, guaranteed returns, maximize returns, profitable, crypto, autopilot, fast payouts.",
+            "main_description must start with the brand name exactly as provided.",
+            "main_description must be 125-158 characters long.",
+            "main_description should follow this structure: brand + 1 emoji + short platform description, then benefit/value, then 1 more emoji near the end.",
+            "Use exactly 2 emojis максимум, never together, never both at the end.",
+            "Allowed emoji style: ⭐, ⚡, 🔥, 🚀, ✅, 💰, ➡️",
+            "main_description should sound like a landing-page SEO description for an AI trading platform, not an investing blog or finance app.",
+            "Avoid phrases equivalent to: invest automatically, maximize returns, rentable, from your mobile, start in minutes, free trial, passive income.",
             "Names must sound plausible for the specified country/locale. Use fictional people.",
             "For each profit string, format the given numeric amount with the currency and in a natural local style for the target language/locale. Keep numbers unchanged.",
-            "Gender rules: test1_name male, test2_name female, test3_name male, test4_name male, test5_name male, test6_name female, single_test1_name female, single_test2_name male, single_test3_name male.",
+            "!!!Important!!!Gender rules: test1_name male, test2_name female, test3_name male, test4_name male, test5_name male, test6_name female, single_test1_name female, single_test2_name male, single_test3_name male.",
             "Gender constraints: test1_name male, test2_name female, test3_name male, test4_name male, test5_name male, test6_name female, single_test1_name female, single_test2_name male, single_test3_name male. NO double-gender writing: 1. Do NOT use parentheses or slashes to indicate gender alternatives (examples: '(a)', '(e)', '(la)', '(le)', '(а)', '(ла)', 'he/she', 'él/ella', 'il/elle', 'er/sie'). 2. Write each testimonial/comment in a single consistent gender form that matches the person’s gender.",
         ],
         "output_keys": [
