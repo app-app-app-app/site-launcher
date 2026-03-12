@@ -303,22 +303,22 @@ include 'lang.php';
 
     <nav class="navbar_menu is-page-height-tablet w-nav-menu" role="navigation">
       <div class="navbar_menu-links">
-        <a class="navbar_link w-nav-link" href="index.php#why-invest" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="<?= $site_url ?>#why-invest" style="background-color: transparent">
           <?= $text_why_invest ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#pricing" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="<?= $site_url ?>#pricing" style="background-color: transparent">
           <?= $text_how_to_invest ?>
         </a>
         <a class="navbar_link w-nav-link" href="about.php" style="background-color: transparent">
           <?= $text_who_we_are ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#minimization" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="<?= $site_url ?>#minimization" style="background-color: transparent">
           <?= $text_investment_risks ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#Beneficios" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="<?= $site_url ?>#Beneficios" style="background-color: transparent">
           <?= $text_benefits ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#faq" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="<?= $site_url ?>#faq" style="background-color: transparent">
           <?= $text_faq ?>
         </a>
       </div>
@@ -681,11 +681,11 @@ include 'lang.php';
                 </div>
                 <div class="footer-list-wrapper">
                   <ul class="footer-list-first">
-                    <li><a class="navbar_link" href="index.php#why-invest" style="background-color: transparent"><span class="footer-link"><?= $footer_link_why_invest ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#pricing" style="background-color: transparent"><span class="footer-link"><?= $footer_link_how_to_invest ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#minimization" style="background-color: transparent"><span class="footer-link"><?= $footer_link_investment_risks ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#Beneficios" style="background-color: transparent"><span class="footer-link"><?= $footer_link_benefits ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#faq" style="background-color: transparent"><span class="footer-link"><?= $footer_link_faq ?></span></a></li>
+                    <li><a class="navbar_link" href="<?= $site_url ?>#why-invest" style="background-color: transparent"><span class="footer-link"><?= $footer_link_why_invest ?></span></a></li>
+                    <li><a class="navbar_link" href="<?= $site_url ?>#pricing" style="background-color: transparent"><span class="footer-link"><?= $footer_link_how_to_invest ?></span></a></li>
+                    <li><a class="navbar_link" href="<?= $site_url ?>#minimization" style="background-color: transparent"><span class="footer-link"><?= $footer_link_investment_risks ?></span></a></li>
+                    <li><a class="navbar_link" href="<?= $site_url ?>#Beneficios" style="background-color: transparent"><span class="footer-link"><?= $footer_link_benefits ?></span></a></li>
+                    <li><a class="navbar_link" href="<?= $site_url ?>#faq" style="background-color: transparent"><span class="footer-link"><?= $footer_link_faq ?></span></a></li>
                   </ul>
                   <ul class="footer-list-first">
                     <li><a class="navbar_link" href="about.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_who_we_are ?></span></a></li>
@@ -729,12 +729,12 @@ include 'lang.php';
   <script src="jquery.min.js"></script>
   <div style="height: 0; overflow: hidden; position: absolute; width: 0">
     <a href="#">Pagina Principale</a>
-    <a href="index.php#why-invest">¿Por qué empezar a invertir?</a>
-    <a href="index.php#pricing">¿Cómo comenzar a invertir?    </a>
+    <a href="<?= $site_url ?>#why-invest">¿Por qué empezar a invertir?</a>
+    <a href="<?= $site_url ?>#pricing">¿Cómo comenzar a invertir?    </a>
     <a href="about.php">¿Quién está detrás de <?= $source ?>?</a>
-    <a href="index.php#minimization">Riesgos asociados a la inversión</a>
-    <a href="index.php#Beneficios">Ventajas    </a>
-    <a href="index.php#faq">FAQ</a>
+    <a href="<?= $site_url ?>#minimization">Riesgos asociados a la inversión</a>
+    <a href="<?= $site_url ?>#Beneficios">Ventajas    </a>
+    <a href="<?= $site_url ?>#faq">FAQ</a>
     <a href="contact.php">Contact</a>
     <a href="private-policy.php">Pravila privatnosti</a>
     <a href="conditions.php">Terms and conditions</a>
