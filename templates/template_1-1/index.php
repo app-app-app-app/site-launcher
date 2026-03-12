@@ -563,7 +563,7 @@ include 'lang.php';
 <header class="navbar_component w-nav" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" data-w-id="8e40c4b5-461f-531e-f642-15e88be2e74a" fs-scrolldisable-element="smart-nav" role="banner">
   <div class="navbar_container">
     <div class="navbar_logo-wrapper">
-      <a href="index.php">
+      <a href="/index.php">
         <img loading="lazy" src="favicon.svg" style="width: 25px; margin: 5px"/>
         <span style="color: black; font-weight: 700; font-size: 15px">
           <?= $source ?>
@@ -573,22 +573,22 @@ include 'lang.php';
 
     <nav class="navbar_menu is-page-height-tablet w-nav-menu" role="navigation">
       <div class="navbar_menu-links">
-        <a class="navbar_link w-nav-link" href="index.php#why-invest" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/index.php#why-invest" style="background-color: transparent">
           <?= $text_why_invest ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#pricing" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/index.php#pricing" style="background-color: transparent">
           <?= $text_how_to_invest ?>
         </a>
-        <a class="navbar_link w-nav-link" href="about.php" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/about.php" style="background-color: transparent">
           <?= $text_who_we_are ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#minimization" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/index.php#minimization" style="background-color: transparent">
           <?= $text_investment_risks ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#Beneficios" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/index.php#Beneficios" style="background-color: transparent">
           <?= $text_benefits ?>
         </a>
-        <a class="navbar_link w-nav-link" href="index.php#faq" style="background-color: transparent">
+        <a class="navbar_link w-nav-link" href="/index.php#faq" style="background-color: transparent">
           <?= $text_faq ?>
         </a>
       </div>
@@ -596,7 +596,7 @@ include 'lang.php';
 
     <div class="navbar_menu-buttons">
       <a class="button w-button"
-         href="register.php"
+         href="/register.php"
          style="
            background:#111827;
            color:#ffffff;
@@ -613,7 +613,7 @@ include 'lang.php';
       </a>
 
       <a class="button w-button"
-         href="register.php"
+         href="/register.php"
          style="
            background:#6D28D9;
            color:#ffffff;
@@ -869,7 +869,7 @@ include 'lang.php';
 <p class="text-size-regular"><?= $text_control ?></p>
 <div class="spacer-medium"></div>
 <div class="button-group">
-<a class="button w-button" href="register.php"><?= $button_signup ?></a>
+<a class="button w-button" href="/register.php"><?= $button_signup ?></a>
 </div>
 <br/>
 </div>
@@ -1176,7 +1176,7 @@ include 'lang.php';
 <p class="text-size-regular"><?= $text_p_transparency ?></p>
 <div class="spacer-medium"></div>
 <div class="button-group">
-<a class="button w-button" href="register.php"><?= $button_signup ?></a>
+<a class="button w-button" href="/register.php"><?= $button_signup ?></a>
 </div>
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="2f80477f-23b3-153b-6ac3-96fff2ff8cd0" style="
@@ -1717,25 +1717,25 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="w-layout-grid footer_menu-wrapper" style="display: flex; flex-direction: column; align-items: flex-start;">
               <div class="footer_link-list" style="display: flex; flex-direction: column; gap: 10px">
                 <div>
-                  <a class="navbar_link w-nav-link footer-logo-link" href="#" style="background-color: transparent">
+                  <a class="navbar_link w-nav-link footer-logo-link" href="/#" style="background-color: transparent">
                     <img alt="" class="navbar1_logo" loading="lazy" src="favicon.svg" style="width: 50px; margin: 5px">
                     <span class="heading-style-h4" style="font-weight: 700; color: white;"><?= $footer_logo_name ?></span>
                   </a>
                 </div>
                 <div class="footer-list-wrapper">
                   <ul class="footer-list-first">
-                    <li><a class="navbar_link" href="index.php#why-invest" style="background-color: transparent"><span class="footer-link"><?= $footer_link_why_invest ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#pricing" style="background-color: transparent"><span class="footer-link"><?= $footer_link_how_to_invest ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#minimization" style="background-color: transparent"><span class="footer-link"><?= $footer_link_investment_risks ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#Beneficios" style="background-color: transparent"><span class="footer-link"><?= $footer_link_benefits ?></span></a></li>
-                    <li><a class="navbar_link" href="index.php#faq" style="background-color: transparent"><span class="footer-link"><?= $footer_link_faq ?></span></a></li>
+                    <li><a class="navbar_link" href="/index.php#why-invest" style="background-color: transparent"><span class="footer-link"><?= $footer_link_why_invest ?></span></a></li>
+                    <li><a class="navbar_link" href="/index.php#pricing" style="background-color: transparent"><span class="footer-link"><?= $footer_link_how_to_invest ?></span></a></li>
+                    <li><a class="navbar_link" href="/index.php#minimization" style="background-color: transparent"><span class="footer-link"><?= $footer_link_investment_risks ?></span></a></li>
+                    <li><a class="navbar_link" href="/index.php#Beneficios" style="background-color: transparent"><span class="footer-link"><?= $footer_link_benefits ?></span></a></li>
+                    <li><a class="navbar_link" href="/index.php#faq" style="background-color: transparent"><span class="footer-link"><?= $footer_link_faq ?></span></a></li>
                   </ul>
                   <ul class="footer-list-first">
-                    <li><a class="navbar_link" href="about.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_who_we_are ?></span></a></li>
-                    <li><a class="navbar_link" href="contact.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_contact ?></span></a></li>
-                    <li><a class="navbar_link" href="private-policy.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_privacy_policy ?></span></a></li>
-                    <li><a class="navbar_link" href="conditions.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_terms_conditions ?></span></a></li>
-                    <li><a class="navbar_link" href="register.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_registration ?></span></a></li>
+                    <li><a class="navbar_link" href="/about.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_who_we_are ?></span></a></li>
+                    <li><a class="navbar_link" href="/contact.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_contact ?></span></a></li>
+                    <li><a class="navbar_link" href="/private-policy.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_privacy_policy ?></span></a></li>
+                    <li><a class="navbar_link" href="/conditions.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_terms_conditions ?></span></a></li>
+                    <li><a class="navbar_link" href="/register.php" style="background-color: transparent"><span class="footer-link"><?= $footer_link_registration ?></span></a></li>
                   </ul>
                 </div>
               </div>
@@ -1760,16 +1760,16 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="webflow.js" type="text/javascript"></script>
 <script src="jquery.min.js"></script>
 <div style="height: 0; overflow: hidden; position: absolute; width: 0">
-<a href="#">Main Page</a>
-<a href="index.php#why-invest">Why invest?</a>
-<a href="index.php#pricing">How to invest?</a>
-<a href="about.php">Who we are</a>
-<a href="index.php#minimization">Investment risks</a>
-<a href="index.php#Beneficios">Benefits</a>
-<a href="index.php#faq">FAQ</a>
-<a href="contact.php">Contact</a>
-<a href="private-policy.php">Privacy Policy</a>
-<a href="conditions.php">Terms and Conditions</a>
+<a href="/#">Main Page</a>
+<a href="/index.php#why-invest">Why invest?</a>
+<a href="/index.php#pricing">How to invest?</a>
+<a href="/about.php">Who we are</a>
+<a href="/index.php#minimization">Investment risks</a>
+<a href="/index.php#Beneficios">Benefits</a>
+<a href="/index.php#faq">FAQ</a>
+<a href="/contact.php">Contact</a>
+<a href="/private-policy.php">Privacy Policy</a>
+<a href="/conditions.php">Terms and Conditions</a>
 </div>
 
   <noscript>
