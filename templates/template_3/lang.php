@@ -12,7 +12,7 @@ $site_lang = "it-IT";
 $crypto_img = "images/crypto_main.png";
 
 $main_h1 = "Profitto giornaliero da <span>745€</span> a <span>1860€</span> grazie alla piattaforma di investimento intelligente";
-$main_p = "Solo per un periodo limitato: registrati in <span>Italia</span> ora";
+$main_p = "Solo per un periodo limitato: registrati ora — <span>$country_name</span>";
 
 // имена с отзывов
 $feedback_strong_1 = "Giulia Martellini";
@@ -84,13 +84,13 @@ $footer_rights = "$source – tutti i diritti riservati";
 // main
 $leaders_badge = "Investitori";
 $leaders_title = "Ecco alcuni degli investitori che ci sostengono:";
-$leader1_text = "Come investitore, ho sempre creduto che l’indipendenza finanziaria sia la chiave della libertà personale. Proprio per questo è stata sviluppata questa piattaforma innovativa basata sull’intelligenza artificiale — per rendere gli investimenti più semplici, chiari e accessibili a tutti. I sistemi finanziari tradizionali spesso appaiono complessi e chiusi, ma le tecnologie moderne permettono alle persone di prendere decisioni di investimento informate e di costruire gradualmente un futuro finanziario stabile. La mia visione è semplice: offrire a tutti l’accesso a strumenti finanziari efficaci che aiutino a muoversi con sicurezza verso la stabilità e l’indipendenza finanziaria.";
+$leader1_text = "Come investitore, ho sempre creduto che l’indipendenza finanziaria sia la base della libertà personale. Per questo è stata creata questa piattaforma basata sull’intelligenza artificiale, pensata per rendere gli investimenti più semplici e accessibili. La mia visione è offrire a tutti strumenti chiari ed efficaci per prendere decisioni informate e costruire con sicurezza la propria stabilità finanziaria.";
 $leader1_name = "— Warren Buffett";
 $leader1_position = "Uno degli investitori di maggior successo nella storia";
-$leader2_text = "Il mondo della finanza sta cambiando rapidamente e la tecnologia svolge un ruolo fondamentale in questa trasformazione. Sono convinto che la combinazione tra esperienza negli investimenti e intelligenza artificiale apra nuove opportunità per le persone in tutto il mondo. Questa piattaforma è stata creata per rendere gli investimenti più accessibili, trasparenti ed efficienti, aiutando gli utenti a prendere decisioni finanziarie informate. Quando le tecnologie moderne lavorano insieme a un’analisi di qualità e a un approccio responsabile agli investimenti, ogni persona ha la possibilità di costruire una stabilità finanziaria a lungo termine.";
+$leader2_text = "Il mondo della finanza sta cambiando rapidamente e la tecnologia gioca un ruolo chiave in questa trasformazione. Credo che l’unione tra esperienza negli investimenti e intelligenza artificiale crei nuove opportunità. Questa piattaforma è stata sviluppata per rendere gli investimenti più accessibili e trasparenti, aiutando le persone a prendere decisioni informate e a costruire una stabilità finanziaria a lungo termine.";
 $leader2_name = "— Larry Fink";
 $leader2_position = "CEO di BlackRock — il più grande gestore patrimoniale al mondo";
-$leader3_text = "Dopo decenni di lavoro nel sistema bancario globale, ho visto come la tecnologia possa cambiare radicalmente il modo in cui le persone gestiscono il proprio denaro. Quando vedo una soluzione che unisce analisi, disciplina e tecnologie moderne, ne riconosco subito il potenziale. Questa piattaforma utilizza l’intelligenza artificiale per rendere gli investimenti più chiari, trasparenti ed efficienti. Innovazioni di questo tipo aiutano le persone a prendere decisioni finanziarie consapevoli e a costruire gradualmente un futuro finanziario stabile. Dopo tanti anni nel settore finanziario ho imparato una cosa semplice: quando l’innovazione si combina con un approccio responsabile agli investimenti, nascono vere opportunità di crescita.";
+$leader3_text = "Dopo molti anni nel sistema bancario globale ho visto come la tecnologia possa cambiare il modo in cui le persone gestiscono il proprio denaro. Questa piattaforma utilizza l’intelligenza artificiale per rendere gli investimenti più chiari e accessibili, aiutando gli utenti a prendere decisioni finanziarie consapevoli. Quando innovazione e approccio responsabile si uniscono, nascono vere opportunità di crescita e stabilità finanziaria.";
 $leader3_name = "— Jamie Dimon";
 $leader3_position = "CEO di JPMorgan Chase — una delle più grandi banche del mondo";
 
@@ -136,9 +136,7 @@ $adv3_text = "La tecnologia blockchain garantisce a tutti i partecipanti un tass
 
 $statistics_badge = "Statistiche";
 $statistics_title = "Numeri che parlano da soli";
-$statistics_description_top = "La trasparenza è il nostro principio fondante. I ricavi giornalieri della piattaforma e il volume di investimenti in costante crescita confermano la stabilità e l'affidabilità del nostro progetto
-<br>
-La nostra strategia segreta di trading azionario si basa su un portafoglio attentamente selezionato, creato analizzando migliaia di aziende leader";
+$statistics_description_top = "La trasparenza è il nostro principio fondante. I ricavi giornalieri della piattaforma e il volume di investimenti in costante crescita confermano la stabilità e l'affidabilità del nostro progetto. La nostra strategia segreta di trading azionario si basa su un portafoglio attentamente selezionato, creato analizzando migliaia di aziende leader";
 $stat1_value = "1,45 €";
 $stat1_denomination = "Milioni";
 $stat1_title = "Investimenti attuali";
@@ -194,26 +192,33 @@ $home_title = "EMPIECE CON <span style=\"text-transform: uppercase\">$source</sp
 
 // conditions page
 $terms_title = "TÉRMINOS DE USO";
-$terms_paragraphs = [
-    "Estas condiciones regulan el uso de la plataforma y son vinculantes para todos los usuarios registrados. Al registrarse o usarla, usted acepta estas condiciones. El uso está reservado exclusivamente a personas mayores de edad y con capacidad jurídica.",
-    "La plataforma puede estar temporalmente limitada por mantenimiento técnico o circunstancias externas. Las funciones, contenidos u ofertas pueden ajustarse o desarrollarse.",
-    "Todos los contenidos, tecnologías y análisis proporcionados están protegidos por la ley. No se permite su uso fuera de la plataforma sin autorización.",
-    "Los usuarios deben facilitar datos correctos y actualizados. Las decisiones de inversión y de trading son responsabilidad propia. No se trata de asesoramiento financiero ni de una garantía de resultados concretos. Los mercados financieros conllevan riesgos, incluida la posible pérdida de capital.",
-    "Los datos personales se tratan de acuerdo con la normativa vigente de protección de datos. Se aplican estándares adecuados de seguridad y cumplimiento.",
-    "Nos reservamos el derecho a modificar los términos de uso. El uso continuado de la plataforma se considerará aceptación de las normas actualizadas."
-];
+$terms_1 = "Estas condiciones regulan el uso de la plataforma y son vinculantes para todos los usuarios registrados. Al registrarse o usarla, usted acepta estas condiciones. El uso está reservado exclusivamente a personas mayores de edad y con capacidad jurídica.";
+
+$terms_2 = "La plataforma puede estar temporalmente limitada por mantenimiento técnico o circunstancias externas. Las funciones, contenidos u ofertas pueden ajustarse o desarrollarse.";
+
+$terms_3 = "Todos los contenidos, tecnologías y análisis proporcionados están protegidos por la ley. No se permite su uso fuera de la plataforma sin autorización.";
+
+$terms_4 = "Los usuarios deben facilitar datos correctos y actualizados. Las decisiones de inversión y de trading son responsabilidad propia. No se trata de asesoramiento financiero ni de una garantía de resultados concretos. Los mercados financieros conllevan riesgos, incluida la posible pérdida de capital.";
+
+$terms_5 = "Los datos personales se tratan de acuerdo con la normativa vigente de protección de datos. Se aplican estándares adecuados de seguridad y cumplimiento.";
+
+$terms_6 = "Nos reservamos el derecho a modificar los términos de uso. El uso continuado de la plataforma se considerará aceptación de las normas actualizadas.";
 
 
 // private page
 $privacy_title = "POLÍTICA DE PRIVACIDAD";
 
-$privacy_paragraphs = [
-    "La protección de sus datos personales es para nosotros una prioridad absoluta. Tratamos sus datos exclusivamente conforme a la normativa de protección de datos vigente, en particular la RGPD.",
-    "Solo recogemos la información necesaria para prestar nuestros servicios —como datos de contacto, cuenta, transacciones y uso técnico. En ciertos casos, una verificación de identidad puede ser legalmente obligatoria.",
-    "El tratamiento de datos se realiza para la gestión de cuentas, la ejecución de transacciones, la atención al cliente, la seguridad, la prevención del fraude y el cumplimiento de obligaciones legales. Recibirá información de marketing solo con su consentimiento expreso.",
-    "La comunicación de datos se realiza exclusivamente a proveedores cuidadosamente seleccionados (p. ej., proveedores de pagos o de TI) y solo en la medida necesaria. No se venden sus datos.",
-    "Empleamos medidas técnicas y organizativas de seguridad adecuadas. Los datos se conservan solo durante el tiempo exigido por la ley o mientras sea necesario para el propósito correspondiente.",
-    "Usted tiene en cualquier momento el derecho a acceder, rectificar, borrar o limitar el tratamiento de sus datos, así como a retirar consentimientos otorgados.",
-    "Puede encontrar más información y las formas de contacto en nuestra web."
-];
+$privacy_1 = "La protección de sus datos personales es para nosotros una prioridad absoluta. Tratamos sus datos exclusivamente conforme a la normativa de protección de datos vigente, en particular la RGPD.";
+
+$privacy_2 = "Solo recogemos la información necesaria para prestar nuestros servicios —como datos de contacto, cuenta, transacciones y uso técnico. En ciertos casos, una verificación de identidad puede ser legalmente obligatoria.";
+
+$privacy_3 = "El tratamiento de datos se realiza para la gestión de cuentas, la ejecución de transacciones, la atención al cliente, la seguridad, la prevención del fraude y el cumplimiento de obligaciones legales. Recibirá información de marketing solo con su consentimiento expreso.";
+
+$privacy_4 = "La comunicación de datos se realiza exclusivamente a proveedores cuidadosamente seleccionados (p. ej., proveedores de pagos o de TI) y solo en la medida necesaria. No se venden sus datos.";
+
+$privacy_5 = "Empleamos medidas técnicas y organizativas de seguridad adecuadas. Los datos se conservan solo durante el tiempo exigido por la ley o mientras sea necesario para el propósito correspondiente.";
+
+$privacy_6 = "Usted tiene en cualquier momento el derecho a acceder, rectificar, borrar o limitar el tratamiento de sus datos, así como a retirar consentimientos otorgados.";
+
+$privacy_7 = "Puede encontrar más información y las formas de contacto en nuestra web.";
 ?>
