@@ -6,6 +6,7 @@ import random
 from typing import Dict, List, Optional, Callable, Tuple
 
 
+
 # OpenAI (required)
 try:
     from openai import OpenAI
@@ -32,9 +33,12 @@ SPECIAL_STRING = {
     "feedback_strong_2",
     "feedback_strong_3",
     "feedback_strong_4",
+    "feedback_strong_5",
+    "feedback_strong_6",
     "page_title_main",
     "page_description_main",
-    "site_name",  # важливо: у нас має бути "$source"
+    "site_name",
+    "crypto_img",
 }
 
 CURRENCY_FALLBACK = {
@@ -129,6 +133,22 @@ CURRENCY_FALLBACK = {
 }
 
 
+CRYPTO_IMAGES = {
+    "IT":"italy.png",
+    "DE":"germany.png",
+    "PL":"poland.png",
+    "ES":"spain.png",
+    "GB":"united-kingdom.png",
+    "CZ":"czech.png",
+    "SE":"sweden.png",
+    "TR":"turkey.png",
+    "PT":"portugal.png",
+    "RO":"romania.png",
+    "AT":"austria.png",
+    "FR":"france.png",
+    "CA":"canada.png",
+    "CH":"switzerland.png",
+}
 
 # -----------------------------
 # Utils
@@ -776,6 +796,7 @@ def _generate_specials_via_llm(
 
     title = _ensure_title_shape(title, target_lang)
     desc = _ensure_desc_shape(desc, target_lang)
+    desc = re.sub(r"\$source([⭐⚡🔥🚀✅💰➡️])", r"$source \1", desc)
 
     if not isinstance(personas, list):
         personas = []
@@ -917,6 +938,7 @@ def _generate_specials_via_llm(
     desc = _ensure_4_emojis_spread(desc)
     desc = _kill_comma_checklist(desc)
     desc = re.sub(r"\s*([.!?])\s*", r"\1 ", desc).strip()  # акуратна пунктуація
+    
 
     
     # --- нормалізація personas ---
@@ -1030,6 +1052,10 @@ def _is_string_safe_to_transform(s: str) -> bool:
         return False
     return True
 
+
+def _extract_php_array_strings(content):
+    pattern = r'\[\s*"([^"]+)"'
+    return re.findall(pattern, content)
 
 def _extract_strings(content: str) -> Tuple[List[str], List[Tuple[int, int]]]:
     """
@@ -1169,11 +1195,23 @@ def _apply_strings(content: str, spans: List[Tuple[int, int]], outs: List[str]) 
         content = content[:start] + _escape_php_string(new_text) + content[end:]
     return content
 
+
+gender_map = {
+    "feedback_description_1": "female",
+    "feedback_description_2": "female",
+    "feedback_description_3": "male",
+    "feedback_description_4": "female",
+    "feedback_description_5": "male",
+    "feedback_description_6": "male",
+}
+
+
 def _llm_transform_strings_onepass(
     client: OpenAI,
     model: str,
     strings: List[str],
     target_lang: str,
+    geo_code: str,
 ) -> List[str]:
     """
     1 LLM-запит на весь список рядків.
@@ -1189,11 +1227,13 @@ def _llm_transform_strings_onepass(
         protected_list.append(ps)
         maps.append(mp)
 
+    
     system = (
         "You are processing a list of website phrases. "
         "Return ONLY strict JSON: {\"out\": [\"...\", \"...\"]}. "
         f"The output language MUST be strictly ISO language code: {target_lang}. "
         "Translate EVERY string to the target language. Even single words like 'Name', 'Contact', 'Email', 'Join'. Do not keep any words from the original language."
+        "The website is for users in the specified country. Do not change the country."
         "Do NOT mix languages. "
         "Rules:\n"
         "1) Length of 'out' equals length of 'in'.\n"
@@ -1201,6 +1241,8 @@ def _llm_transform_strings_onepass(
         "3) Do NOT modify tokens like __PH0__, __PH1__.\n"
         "4) Return only plain strings inside JSON.\n"
         "5) No explanations."
+        "6) Some strings are user reviews. Gender order:1 female, 2 female, 3 male, 4 female, 5 male, 6 male.  Ensure the translation keeps the correct gender."
+        
     )
 
     task = (
@@ -1438,6 +1480,7 @@ def generate_lang_files(
     brand: str,
     template_kind: str = "template_1",
     model: str = DEFAULT_MODEL,
+    country_name: Optional[str] = None,
     progress_cb: Optional[Callable[[float, str], None]] = None,
 ) -> List[Dict[str, str]]:
     """
@@ -1446,6 +1489,9 @@ def generate_lang_files(
     """
     client = _get_openai_client()
     template = template_bytes.decode("utf-8", errors="replace")
+    content = template
+    if country_name:
+        content = _set_php_var(content, "country_name", country_name, False)
     template_kind = (template_kind or "template_1").strip().lower()
 
     out_files: List[Dict[str, str]] = []
@@ -1458,7 +1504,7 @@ def generate_lang_files(
         # -------------------------
         # TEMPLATE 1 (existing flow)
         # -------------------------
-        if template_kind in ("template_1", "t1", "template1", "1"):
+        if template_kind == "template_1":
             if progress_cb:
                 progress_cb((idx - 1) / total, f"Генерую спец-дані (адреса/персони/SEO) для {domain}…")
 
@@ -1501,13 +1547,102 @@ def generate_lang_files(
 
             strings, spans = _extract_strings(content)
             if strings:
-                outs = _llm_transform_strings_onepass(client, model, strings, target_lang)
+                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                 content = _apply_strings(content, spans, outs)
+
+        
+        # -------------------------
+        # TEMPLATE 3
+        # -------------------------
+        elif template_kind == "template_3":
+
+            if progress_cb:
+                progress_cb((idx - 1) / total, f"Генерую дані template_3 для {domain}…")
+        
+            rating_value = round(random.uniform(4.5,5.0),1)
+            rating_count = random.randint(300,5000)
+            price = _make_price(geo_currency)
+        
+            # MANUAL
+            content = _set_php_var(content,"site_name","$source",numeric=False)
+            content = _set_php_var(content,"site_url",f"https://{domain}",numeric=False)
+            content = _set_php_var(content,"app_currency",geo_currency,numeric=False)
+            content = _set_php_var(content,"app_price",str(price),numeric=True)
+            content = _set_php_var(content,"rating_value",str(rating_value),numeric=True)
+            content = _set_php_var(content,"rating_count",str(rating_count),numeric=True)
+            content = _set_php_var(content,"site_lang",target_lang,numeric=False)
+            content = _set_php_var(content,"site_gmail",_gmail_for_domain(domain),numeric=False)
+            if country_name:
+                content = _set_php_var(content, "country_name", country_name, False)
+            
+        
+            # crypto image
+            img = f"images/{CRYPTO_IMAGES.get(cc,'crypto_main.png')}"
+            content = _set_php_var(content,"crypto_img",img,numeric=False)
+        
+            # SEO generation
+            gen = _generate_specials_via_llm(
+                client=client,
+                model=model,
+                domain=domain,
+                cc=cc,
+                target_lang=target_lang,
+            )
+        
+            content = _set_php_var(content,"adress_name",gen["adress_name"],numeric=False)
+            content = _set_php_var(content,"page_title_main",gen["page_title_main"],numeric=False)
+            content = _set_php_var(content,"page_description_main",gen["page_description_main"],numeric=False)
+        
+            # names generation with gender control
+            system = """
+        Return JSON only:
+        {"names":["name1","name2","name3","name4","name5","name6"]}
+
+        Generate realistic FIRST NAMES used in the given country.
+
+        Language of names should match the language:
+        {language}
+
+        Gender order MUST be:
+        1 female
+        2 female
+        3 male
+        4 female
+        5 male
+        6 male
+
+        Return ONLY first names.
+        """
+        
+            payload = {
+                "country": cc,
+                "language": target_lang
+            }
+            
+        
+            names = _llm_json(client,model,system,payload).get("names",[])
+        
+            while len(names)<6:
+                names.append("Alex")
+        
+            content = _set_php_var(content,"feedback_strong_1",names[0],numeric=False)
+            content = _set_php_var(content,"feedback_strong_2",names[1],numeric=False)
+            content = _set_php_var(content,"feedback_strong_3",names[2],numeric=False)
+            content = _set_php_var(content,"feedback_strong_4",names[3],numeric=False)
+            content = _set_php_var(content,"feedback_strong_5",names[4],numeric=False)
+            content = _set_php_var(content,"feedback_strong_6",names[5],numeric=False)
+        
+            strings,spans=_extract_strings(content)
+        
+            if strings:
+                outs=_llm_transform_strings_onepass(client,model,strings,target_lang,geo_code)
+                content=_apply_strings(content,spans,outs)
+
 
         # -------------------------
         # TEMPLATE 2 (fixed flow)
         # -------------------------
-        else:
+        elif template_kind == "template_2":
             if progress_cb:
                 progress_cb((idx - 1) / total, f"Генерую MANUAL/імена/прибутки для {domain}…")
 
@@ -1599,6 +1734,9 @@ def generate_lang_files(
             content = _set_php_var(content, "test5_profit", _fmt_money(profit_amounts["test5_profit"], currency_code), numeric=False)
             content = _set_php_var(content, "test6_profit", _fmt_money(profit_amounts["test6_profit"], currency_code), numeric=False)
 
+        else:
+            raise ValueError(f"Unknown template_kind: {template_kind}")
+
         if progress_cb:
             progress_cb(idx / total, f"Готово: {domain}")
 
@@ -1610,6 +1748,7 @@ def generate_lang_files(
 def generate_lang_files_multi(
     template1_bytes: bytes,
     template2_bytes: bytes,
+    template3_bytes: bytes,
     geo_code: Optional[str],
     geo_currency: str,
     target_lang: str,
@@ -1617,19 +1756,34 @@ def generate_lang_files_multi(
     domain_templates: Dict[str, str],
     brand: str,
     model: str = DEFAULT_MODEL,
+    geo_defaults: Optional[Dict] = None,
     progress_cb: Optional[Callable[[float, str], None]] = None,
 ) -> List[Dict[str, str]]:
     """
     Generate lang.php for multiple templates.
-    domain_templates maps domain -> "template_1" or "template_2"
+    domain_templates maps domain -> template id
     """
+
     out: List[Dict[str, str]] = []
-    # preserve order
+
+    # ---- визначаємо назву країни ----
+    country_name = geo_code or ""
+    if geo_defaults and geo_code and geo_code in geo_defaults:
+        country_name = geo_defaults[geo_code].get("name", geo_code)
+
+    # ---- генерація для кожного домену ----
     for d in domains:
+
         kind = (domain_templates or {}).get(d, "template_1")
-        if kind in ("template_2","t2","2","template2"):
+
+        if kind in ("template_3", "t3", "3", "template3"):
+            tpl = template3_bytes
+            tk = "template_3"
+
+        elif kind in ("template_2", "t2", "2", "template2"):
             tpl = template2_bytes
             tk = "template_2"
+
         else:
             tpl = template1_bytes
             tk = "template_1"
@@ -1643,8 +1797,11 @@ def generate_lang_files_multi(
             brand=brand,
             template_kind=tk,
             model=model,
+            country_name=country_name,
             progress_cb=progress_cb,
         )
+
         if files:
             out.append(files[0])
+
     return out
