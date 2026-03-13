@@ -260,16 +260,36 @@ include 'lang.php';
               }
             </style>
 
-<section class="welcome" aria-labelledby="welcome-title">
-    <h1 style="text-align: center;">
+<section class="welcome" aria-labelledby="terms-title">
+
+    <h1 id="terms-title" style="text-align: center;">
         <?= $terms_title ?>
     </h1>
 
-    <?php foreach ($terms_paragraphs as $paragraph): ?>
-        <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
-            <?= $paragraph ?>
-        </p>
-    <?php endforeach; ?>
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_1 ?>
+    </p>
+
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_2 ?>
+    </p>
+
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_3 ?>
+    </p>
+
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_4 ?>
+    </p>
+
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_5 ?>
+    </p>
+
+    <p style="text-align: center; max-width: 1000px; margin: 20px auto 0 auto;" class="leaders__description">
+        <?= $terms_6 ?>
+    </p>
+
 </section>
 
 
