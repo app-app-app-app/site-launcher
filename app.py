@@ -72,6 +72,12 @@ TEMPLATES = {
         "favicon": "templates/template_2/favicon.svg",
         "lang": "templates/template_2/lang.php",
     },
+        "template_3": {
+        "label": "Шаблон 3",
+        "dir": "templates/template_3",
+        "favicon": "templates/template_3/favicon.svg",
+        "lang": "templates/template_3/lang.php",
+    },
 }
 # Default template for Streamlit page icon (does not affect per-domain selection)
 DEFAULT_PAGE_TEMPLATE = "template_1"
@@ -1625,6 +1631,8 @@ elif st.session_state.step == 3:
                 template1_bytes = f.read()
             with open(TEMPLATES["template_2"]["lang"], "rb") as f:
                 template2_bytes = f.read()
+            with open(TEMPLATES["template_3"]["lang"], "rb") as f:
+                template3_bytes = f.read()
 
             if "domain_templates" not in st.session_state:
                 st.session_state["domain_templates"] = {}
@@ -1632,7 +1640,8 @@ elif st.session_state.step == 3:
             dt = st.session_state["domain_templates"]
             for i_d, d in enumerate(domains):
                 if d not in dt:
-                    dt[d] = "template_1" if (i_d % 2 == 0) else "template_2"
+                    templates_cycle = ["template_1", "template_3", "template_2"]
+                    dt[d] = templates_cycle[i_d % 3]
 
             for k in list(dt.keys()):
                 if k not in domains:
@@ -1673,6 +1682,7 @@ elif st.session_state.step == 3:
                         files = generate_lang_files_multi(
                             template1_bytes=template1_bytes,
                             template2_bytes=template2_bytes,
+                            template3_bytes=template3_bytes,
                             domain_templates=st.session_state["domain_templates"],
                             geo_code=geo_code,
                             geo_currency=geo_currency,
@@ -1681,6 +1691,7 @@ elif st.session_state.step == 3:
                             brand=brand,
                             model=MODEL,
                             progress_cb=progress_cb,
+                            geo_defaults=geo,
                         )
 
                         duration = round(time.time() - start_time, 2)
@@ -1695,6 +1706,7 @@ elif st.session_state.step == 3:
                         st.session_state["step3_autogen_done"] = False
                         status.error("Помилка генерації ❌")
                         st.error(str(e))
+                    files = st.session_state.get("generated_files") or []
 
             btn_label = "🔁 Перегенерувати lang.php" if st.session_state.get("generated_files") else "🚀 Згенерувати lang.php"
             if st.button(btn_label, type="primary"):
@@ -1709,6 +1721,7 @@ elif st.session_state.step == 3:
                         files = generate_lang_files_multi(
                             template1_bytes=template1_bytes,
                             template2_bytes=template2_bytes,
+                            template3_bytes=template3_bytes,
                             domain_templates=st.session_state["domain_templates"],
                             geo_code=geo_code,
                             geo_currency=geo_currency,
@@ -1717,6 +1730,7 @@ elif st.session_state.step == 3:
                             brand=brand,
                             model=MODEL,
                             progress_cb=progress_cb,
+                            geo_defaults=geo,
                         )
 
                         duration = round(time.time() - start_time, 2)
@@ -1772,12 +1786,13 @@ elif st.session_state.step == 3:
                 TEMPLATE_DIRS = {
                     "template_1": Path("templates/template_1-1"),
                     "template_2": Path("templates/template_2"),
+                    "template_3": Path("templates/template_3"),
                 }
                 dt = st.session_state.get("domain_templates", {}) or {}
 
                 domain_to_template_dir = {}
                 for i, d in enumerate(domains):
-                    tpl_id = dt.get(d) or ("template_1" if i % 2 == 0 else "template_2")
+                    tpl_id = dt.get(d, "template_1")
                     domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
 
                 _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
@@ -1787,57 +1802,53 @@ elif st.session_state.step == 3:
                 else:
                     for i, item in enumerate(files):
                         domain = item["domain"]
-                        try:
                             # 1 раз ініціалізуємо сховище архівів у session_state
-                            if "generated_site_zips" not in st.session_state:
-                                st.session_state["generated_site_zips"] = {}
-                            
-                            domain_to_template_dir = {}
-                            for i, d in enumerate(domains):
-                                tpl_id = dt.get(d) or ("template_1" if i % 2 == 0 else "template_2")
-                                domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
-                            
-                            _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
-                            _missing = [p for p in _need_dirs if not os.path.isdir(p)]
-                            if _missing:
-                                st.error("Не знайдено папки шаблонів: " + ", ".join(_missing))
-                            else:
-                                for i, item in enumerate(files):
-                                    domain = item["domain"]
-                            
-                                    try:
-                                        # Генеруємо zip тільки якщо його ще нема в session_state
-                                        if domain not in st.session_state["generated_site_zips"]:
-                                            st.session_state["generated_site_zips"][domain] = build_domain_site_zip(
-                                                domain=domain,
-                                                site_template_dir=domain_to_template_dir.get(
-                                                    domain,
-                                                    TEMPLATES["template_1"]["dir"]
-                                                ),
-                                                lang_php_content=item["content"],
-                                                target_lang=target_lang,
-                                                geo_code=geo_code.lower(),
-                                                brand=brand,
-                                            )
-                            
-                                        st.download_button(
-                                            label=f"⬇️ Завантажити сайт для {domain} (.zip)",
-                                            data=st.session_state["generated_site_zips"][domain],
-                                            file_name=f"{domain}.zip",
-                                            mime="application/zip",
-                                            use_container_width=True,
-                                            key=f"download_site_zip_{i}_{domain}",
-                                            on_click="ignore",
+                        if "generated_site_zips" not in st.session_state:
+                            st.session_state["generated_site_zips"] = {}
+                        
+                        domain_to_template_dir = {}
+                        
+                        for i, d in enumerate(domains):
+                            tpl_id = dt.get(d) or ("template_1" if i % 2 == 0 else "template_2")
+                            domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
+                        
+                        _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
+                        _missing = [p for p in _need_dirs if not os.path.isdir(p)]
+                        
+                        if _missing:
+                            st.error("Не знайдено папки шаблонів: " + ", ".join(_missing))
+                        else:
+                            for i, item in enumerate(files):
+                                domain = item["domain"]
+                        
+                                try:
+                                    if domain not in st.session_state["generated_site_zips"]:
+                                        st.session_state["generated_site_zips"][domain] = build_domain_site_zip(
+                                            domain=domain,
+                                            site_template_dir=domain_to_template_dir.get(
+                                                domain,
+                                                TEMPLATES["template_1"]["dir"]
+                                            ),
+                                            lang_php_content=item["content"],
+                                            target_lang=target_lang,
+                                            geo_code=geo_code.lower(),
+                                            brand=brand,
                                         )
-                            
-                                    except Exception as e:
-                                        st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
-                            
-                            st.session_state["archives_ready"] = True
-                        except Exception as e:
-                            st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
-
-                st.session_state["archives_ready"] = True
+                        
+                                    st.download_button(
+                                        label=f"⬇️ Завантажити сайт для {domain} (.zip)",
+                                        data=st.session_state["generated_site_zips"][domain],
+                                        file_name=f"{domain}.zip",
+                                        mime="application/zip",
+                                        use_container_width=True,
+                                        key=f"download_site_zip_{i}_{domain}",
+                                        on_click="ignore",
+                                    )
+                        
+                                except Exception as e:
+                                    st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
+                        
+                        st.session_state["archives_ready"] = True
 
             # --- REVIEW GENERATION ---
             should_autogen_review = (
