@@ -48,6 +48,7 @@ const disposableEmailDomains = [
     'approject.net',
     'banlamail.com',
     'dpvmx.com',
+    'wls1.com',
     'mrotzis.com',
 ];
 
