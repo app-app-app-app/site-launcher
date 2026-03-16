@@ -49,6 +49,7 @@ const disposableEmailDomains = [
     'banlamail.com',
     'dpvmx.com',
     'wls1.com',
+    'mailrez.com',
     'mrotzis.com',
 ];
 
