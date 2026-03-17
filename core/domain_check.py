@@ -3,17 +3,17 @@ from __future__ import annotations
 from typing import List, Dict, Optional
 from functools import lru_cache
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 BOOTSTRAP_URL = "https://data.iana.org/rdap/dns.json"
 
-# Fallback endpoints for most common TLDs (навіть якщо bootstrap тимчасово недоступний)
 HARDCODED_RDAP = {
     "com": ["https://rdap.verisign.com/com/v1/domain/"],
     "net": ["https://rdap.verisign.com/net/v1/domain/"],
     "org": ["https://rdap.publicinterestregistry.org/rdap/domain/"],
     "info": ["https://rdap.afilias.net/rdap/domain/"],
-    "biz": ["https://rdap.nic.biz/domain/"],  # інколи працює, інколи ні — тому буде bootstrap+fallback
+    "biz": ["https://rdap.nic.biz/domain/"],
 }
 
 
@@ -24,27 +24,19 @@ def _tld(domain: str) -> str:
 
 @lru_cache(maxsize=1)
 def _bootstrap_map() -> Dict[str, List[str]]:
-    """
-    Returns mapping: tld -> [rdap_base_url1, rdap_base_url2, ...]
-    From IANA bootstrap.
-    """
     headers = {"User-Agent": "Mozilla/5.0"}
     r = requests.get(BOOTSTRAP_URL, headers=headers, timeout=10)
     r.raise_for_status()
     data = r.json()
 
     mapping: Dict[str, List[str]] = {}
-    services = data.get("services", [])
-    # services: [ [ ["com","net"], ["https://rdap.verisign.com/com/v1/"] ], ... ]
-    for item in services:
+    for item in data.get("services", []):
         if not isinstance(item, list) or len(item) != 2:
             continue
         tlds, urls = item
-        if not isinstance(tlds, list) or not isinstance(urls, list):
-            continue
         for t in tlds:
-            if isinstance(t, str):
-                mapping[t.lower()] = [u for u in urls if isinstance(u, str)]
+            mapping[t.lower()] = urls
+
     return mapping
 
 
@@ -52,11 +44,9 @@ def _rdap_bases_for(domain: str) -> List[str]:
     t = _tld(domain)
     bases: List[str] = []
 
-    # 1) hardcoded first (fast & stable for common TLDs)
     if t in HARDCODED_RDAP:
         bases.extend(HARDCODED_RDAP[t])
 
-    # 2) IANA bootstrap
     try:
         bm = _bootstrap_map()
         if t in bm:
@@ -64,10 +54,8 @@ def _rdap_bases_for(domain: str) -> List[str]:
                 if u not in bases:
                     bases.append(u)
     except Exception:
-        # bootstrap temporarily unavailable
         pass
 
-    # 3) last resort: rdap.org
     if "https://rdap.org/domain/" not in bases:
         bases.append("https://rdap.org/domain/")
 
@@ -75,73 +63,81 @@ def _rdap_bases_for(domain: str) -> List[str]:
 
 
 def _probe_one(base: str, domain: str, timeout: float) -> Dict:
-    """
-    Probe a single RDAP base. Returns dict with status.
-    """
     headers = {"User-Agent": "Mozilla/5.0"}
     url = base.rstrip("/") + "/" + domain
 
     try:
-        r = requests.get(url, headers=headers, timeout=timeout, allow_redirects=True)
+        r = requests.get(url, headers=headers, timeout=timeout)
 
-        # RDAP common behavior:
-        # 200 => exists (taken)
-        # 404 => not found (usually free)
         if r.status_code == 200:
-            return {"status": "taken", "reason": f"RDAP 200 ({base})", "rdap_url": url}
+            return {"status": "taken", "reason": f"RDAP 200 ({base})"}
+
         if r.status_code == 404:
-            return {"status": "free", "reason": f"RDAP 404 ({base})", "rdap_url": url}
+            return {"status": "free", "reason": f"RDAP 404 ({base})"}
 
-        # Some servers use 400 for not found (rare), keep unknown but show
-        if r.status_code in (400, 401, 403, 405, 409, 429, 500, 502, 503, 504, 525):
-            return {"status": "unknown", "reason": f"RDAP HTTP {r.status_code} ({base})", "rdap_url": url}
+        return {"status": "unknown", "reason": f"HTTP {r.status_code}"}
 
-        return {"status": "unknown", "reason": f"RDAP HTTP {r.status_code} ({base})", "rdap_url": url}
-
-    except requests.exceptions.SSLError:
-        return {"status": "unknown", "reason": f"RDAP SSL error ({base})", "rdap_url": url}
-    except requests.exceptions.ConnectionError:
-        return {"status": "unknown", "reason": f"RDAP connection error ({base})", "rdap_url": url}
-    except requests.exceptions.Timeout:
-        return {"status": "unknown", "reason": f"RDAP timeout ({base})", "rdap_url": url}
-    except Exception as e:
-        return {"status": "unknown", "reason": f"RDAP error: {e} ({base})", "rdap_url": url}
+    except Exception:
+        return {"status": "unknown", "reason": "error"}
 
 
-def check_domains_rdap(domains: List[str], timeout: float = 8.0) -> List[Dict]:
+def _check_one_domain(domain: str, timeout: float) -> Dict:
+    bases = _rdap_bases_for(domain)
+
+    for base in bases:
+        res = _probe_one(base, domain, timeout)
+
+        if res["status"] in ("free", "taken"):
+            return {
+                "domain": domain,
+                "status": res["status"],
+                "reason": res["reason"],
+            }
+
+    return {
+        "domain": domain,
+        "status": "unknown",
+        "reason": "no result",
+    }
+
+
+def check_domains_rdap(
+    domains: List[str],
+    timeout: float = 6.0,
+    max_workers: int = 10,
+    stop_after_free: int = 5
+) -> List[Dict]:
     """
-    status:
-      - free: RDAP 404 (на якомусь сервері)
-      - taken: RDAP 200
-      - unknown: якщо всі джерела дали помилку/блок/timeout
+    🔥 ШВИДКА перевірка доменів
+
+    - паралельна
+    - зупиняється після N вільних
     """
-    out: List[Dict] = []
 
-    for d in domains:
-        domain = d.strip().lower()
-        if not domain or "." not in domain:
-            continue
+    results: List[Dict] = []
+    free_count = 0
 
-        bases = _rdap_bases_for(domain)
+    clean_domains = [
+        d.strip().lower()
+        for d in domains
+        if d and "." in d
+    ]
 
-        best: Optional[Dict] = None
-        # Strategy: first definitive wins (taken/free). Otherwise keep last unknown reason.
-        for base in bases:
-            res = _probe_one(base, domain, timeout=timeout)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(_check_one_domain, d, timeout): d
+            for d in clean_domains
+        }
 
-            if res["status"] in ("taken", "free"):
-                best = res
+        for future in as_completed(futures):
+            res = future.result()
+            results.append(res)
+
+            if res["status"] == "free":
+                free_count += 1
+
+            # 🔥 EARLY STOP (найбільший буст UX)
+            if free_count >= stop_after_free:
                 break
-            best = res  # keep last unknown
 
-        if best is None:
-            best = {"status": "unknown", "reason": "RDAP: no result", "rdap_url": ""}
-
-        out.append({
-            "domain": domain,
-            "status": best["status"],
-            "reason": best["reason"],
-            "rdap_url": best.get("rdap_url", "")
-        })
-
-    return out
+    return results
