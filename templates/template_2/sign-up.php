@@ -44,7 +44,7 @@ include 'lang.php';
   "@type": "SoftwareApplication",
   "name": "<?= $site_name ?>",
   "operatingSystem": "ANDROID, iOS",
-  "applicationCategory": "GameApplication",
+  "applicationCategory": "FinanceApplication",
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "<?= $rating_value ?>",
