@@ -2,6 +2,18 @@ from __future__ import annotations
 import re
 import unicodedata
 
+# --- ДОДАНО: кастомна нормалізація (ВАЖЛИВО) ---
+CUSTOM_MAP = {
+    "ł": "l", "Ł": "l",
+    "ß": "ss",
+    "ø": "o", "Ø": "o",
+    "đ": "d", "Đ": "d",
+    "ı": "i", "İ": "i",
+    "ş": "s", "Ş": "s",
+    "ğ": "g", "Ğ": "g",
+    "ç": "c", "Ç": "c",
+}
+
 # Мінімальні транслітерації (достатньо для доменів)
 UA_RU = {
     "а":"a","б":"b","в":"v","г":"h","ґ":"g","д":"d","е":"e","є":"ye","ж":"zh","з":"z","и":"y","і":"i","ї":"yi","й":"y",
@@ -14,16 +26,32 @@ GR = {
     "ξ":"x","ο":"o","π":"p","ρ":"r","σ":"s","ς":"s","τ":"t","υ":"y","φ":"f","χ":"ch","ψ":"ps","ω":"o"
 }
 
-def _strip_accents(s: str) -> str:
-    nfkd = unicodedata.normalize("NFKD", s)
-    return "".join([c for c in nfkd if not unicodedata.combining(c)])
+
+# --- ДОДАНО: нормалізація бренду ---
+def normalize_brand(s: str) -> str:
+    if not s:
+        return ""
+
+    # 1. кастомні символи (польська, турецька і т.д.)
+    for k, v in CUSTOM_MAP.items():
+        s = s.replace(k, v)
+
+    # 2. прибираємо акценти (é → e, á → a)
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c))
+
+    return s
+
 
 def slugify_brand(s: str) -> str:
     if not s:
         return ""
 
     s = s.strip()
-    s = _strip_accents(s)
+
+    # 🔥 ГОЛОВНИЙ ФІКС
+    s = normalize_brand(s)
+
     s = s.lower()
 
     out = []
@@ -38,9 +66,12 @@ def slugify_brand(s: str) -> str:
             out.append("-")
         else:
             # інше — пропускаємо
-            out.append("")
+            continue
 
     res = "".join(out)
+
+    # прибрати подвійні дефіси
     res = re.sub(r"-{2,}", "-", res).strip("-")
-    # доменне правило: максимум 63 символи на label
+
+    # максимум 63 символи
     return res[:63]
