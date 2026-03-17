@@ -252,6 +252,9 @@ def init_state():
     st.session_state.setdefault("generated_review", None)
     st.session_state.setdefault("step3_review_autogen_done", False)
     st.session_state.setdefault("review_generation_error", None)
+    
+
+    st.session_state.setdefault("auto_download_done", False)
 
 
 def reset_all():
@@ -259,7 +262,6 @@ def reset_all():
     # Тому не можна "м'яко" присвоювати значення widget-key'ам в цьому ж ререндері.
     # Робимо повне очищення і НЕ продовжуємо поточний ререндер — одразу rerun.
     st.session_state.clear()
-    st.rerun()
 
 
 
@@ -1296,6 +1298,27 @@ with st.sidebar:
 
     st.success(f"Цільова мова: {st.session_state.target_lang}")
 
+    # --- TSV ---
+    st.markdown("### 📋 TSV")
+    
+    brand = (st.session_state.get("brand") or "").strip()
+    geo_code = st.session_state.get("geo_code") or "UNKNOWN"
+    lang_code = st.session_state.get("target_lang") or "en"
+    
+    domains = st.session_state.get("chosen_domains") or []
+    tsv = _build_tsv_row(brand, geo_code, lang_code, domains)
+    
+    st.sidebar.text_area(
+        " ",
+        value=tsv,
+        height=90,
+        label_visibility="collapsed",
+    )
+    
+    copy_button(tsv, "📋 Скопіювати TSV", key="copy_tsv_btn")
+    
+    st.sidebar.caption("TSV = поля розділені табуляцією. Встав у Sheets/Excel — розіб’ється на колонки.")
+    
     st.divider()
        
     st.sidebar.divider()
@@ -1318,25 +1341,6 @@ with st.sidebar:
         copy_button(domains_txt, "📋 Скопіювати домени", key="copy_domains_btn")
     
     
-    # --- TSV ---
-    st.sidebar.markdown("### 📋 Рядок для таблиці (TSV)")
-    
-    brand = (st.session_state.get("brand") or "").strip()
-    geo_code = st.session_state.get("geo_code") or "UNKNOWN"
-    lang_code = st.session_state.get("target_lang") or "en"
-    
-    tsv = _build_tsv_row(brand, geo_code, lang_code, chosen)
-    
-    st.sidebar.text_area(
-        " ",
-        value=tsv,
-        height=90,
-        label_visibility="collapsed",
-    )
-    
-    copy_button(tsv, "📋 Скопіювати TSV", key="copy_tsv_btn")
-    
-    st.sidebar.caption("TSV = поля розділені табуляцією. Встав у Sheets/Excel — розіб’ється на колонки.")
     
     if st.button("🔄 Скинути все", use_container_width=True):
         reset_all()
@@ -1406,6 +1410,8 @@ if st.session_state.step == 1:
 
     if not st.session_state.serp_checked:
         st.caption("Щоб перейти на Крок 2, спочатку натисни “Я перевірив SERP”.")
+
+    st.divider()
 
 # ---------------------------
 # STEP 2
@@ -1583,7 +1589,7 @@ elif st.session_state.step == 2:
 # ---------------------------
 elif st.session_state.step == 3:
     st.subheader("Крок 3 — Генерація `lang.php` + таски")
-
+    
     _missing_lang = [t["lang"] for t in TEMPLATES.values() if not os.path.exists(t["lang"])]
     if _missing_lang:
         st.error("Не знайдено файл(и) шаблону lang.php: " + ", ".join(_missing_lang))
@@ -1597,258 +1603,124 @@ elif st.session_state.step == 3:
         if geo_code != "UNKNOWN" and geo_code in geo:
             geo_currency = geo[geo_code].get("currency", "EUR")
 
-        st.caption(
-            f"**Бренд:** {brand or '—'}  •  "
-            f"**Гео:** {_geo_name_ua(geo_code)}  •  "
-            f"**Мова:** {target_lang}"
-        )
-
-        if domains:
-            st.caption("**Домени:** " + ", ".join(domains))
-
         if not domains:
             st.error("Немає обраних доменів. Повернись на Крок 2.")
         else:
-            # ---- TASKS ----
             st.markdown("## 🧾 Таски")
+
             buy_txt = _build_buy_task_text(brand, domains)
             launch_txt = _build_launch_tasks(brand, domains, geo_code, target_lang)
 
-            c1, c2 = st.columns(2, gap="large")
+            c1, c2 = st.columns(2)
             with c1:
-                st.markdown("### ТЗ на купівлю домену")
-                st.text_area(" ", value=buy_txt, height=330, key="tz_buy_area", label_visibility="collapsed")
-                copy_button(buy_txt, "📋 Скопіювати ТЗ (купівля)", key="copy_task_buy_btn")
+                st.text_area("ТЗ купівля", buy_txt, height=300)
+                copy_button(buy_txt, "📋 Скопіювати", "copy_buy")
 
             with c2:
-                st.markdown("### ТЗ за заведення сайту")
-                st.text_area("  ", value=launch_txt, height=330, key="tz_setup_area", label_visibility="collapsed")
-                copy_button(launch_txt, "📋 Скопіювати ТЗ (заведення)", key="copy_task_launch_btn")
+                st.text_area("ТЗ запуск", launch_txt, height=300)
+                copy_button(launch_txt, "📋 Скопіювати", "copy_launch")
 
             st.divider()
 
-            with open(TEMPLATES["template_1"]["lang"], "rb") as f:
-                template1_bytes = f.read()
-            with open(TEMPLATES["template_2"]["lang"], "rb") as f:
-                template2_bytes = f.read()
-            with open(TEMPLATES["template_3"]["lang"], "rb") as f:
-                template3_bytes = f.read()
-
-            if "domain_templates" not in st.session_state:
-                st.session_state["domain_templates"] = {}
-
-            dt = st.session_state["domain_templates"]
-            for i_d, d in enumerate(domains):
-                if d not in dt:
-                    templates_cycle = ["template_1", "template_3", "template_2"]
-                    dt[d] = templates_cycle[i_d % 3]
-
-            for k in list(dt.keys()):
-                if k not in domains:
-                    dt.pop(k, None)
-
-            dt = st.session_state.get("domain_templates") or {}
-            st.markdown("### 🧩 Шаблони для обраних доменів")
-            for d in domains:
-                tpl = dt.get(d, "template_1")
-                st.caption(f"`{d}` → **{TEMPLATES.get(tpl, {}).get('label', tpl)}**")
-
-            st.divider()
-
-            progress = st.progress(0.0)
+            # --- генерація ---
+            progress = st.progress(0)
             status = st.empty()
 
-            def progress_cb(p: float, msg: str):
-                p = max(0.0, min(1.0, float(p)))
+            def progress_cb(p, msg):
                 progress.progress(p)
                 status.info(msg)
 
             MODEL = "gpt-5-mini"
-            st.caption("Під час генерації буде прогрес. Після завершення — кнопки для скачування.")
 
-            # --- AUTO GENERATION lang.php ---
             should_autogen = (
                 (not st.session_state.get("generated_files"))
                 and (not st.session_state.get("step3_autogen_done"))
             )
 
-            if should_autogen:
+            if should_autogen or st.button("🚀 Згенерувати / Перегенерувати"):
                 st.session_state["step3_autogen_done"] = True
-                st.session_state["archives_ready"] = False
+                try:
+                    files = generate_lang_files_multi(
+                        template1_bytes=open(TEMPLATES["template_1"]["lang"], "rb").read(),
+                        template2_bytes=open(TEMPLATES["template_2"]["lang"], "rb").read(),
+                        template3_bytes=open(TEMPLATES["template_3"]["lang"], "rb").read(),
+                        domain_templates=st.session_state.get("domain_templates", {}),
+                        geo_code=geo_code,
+                        geo_currency=geo_currency,
+                        target_lang=target_lang,
+                        domains=domains,
+                        brand=brand,
+                        model=MODEL,
+                        progress_cb=progress_cb,
+                        geo_defaults=geo,
+                    )
 
-                start_time = time.time()
-                with st.spinner("🔄 Автоматична генерація lang.php…"):
-                    try:
-                        files = generate_lang_files_multi(
-                            template1_bytes=template1_bytes,
-                            template2_bytes=template2_bytes,
-                            template3_bytes=template3_bytes,
-                            domain_templates=st.session_state["domain_templates"],
-                            geo_code=geo_code,
-                            geo_currency=geo_currency,
-                            target_lang=target_lang,
-                            domains=domains,
-                            brand=brand,
-                            model=MODEL,
-                            progress_cb=progress_cb,
-                            geo_defaults=geo,
-                        )
+                    st.session_state["generated_files"] = files
+                    status.success("Готово ✅")
+                    progress.progress(1.0)
+                    st.session_state["auto_download_done"] = False
 
-                        duration = round(time.time() - start_time, 2)
-                        st.session_state["generated_files"] = files
-                        st.session_state["last_generation_time"] = duration
-
-                        status.success("Готово ✅")
-                        progress.progress(1.0)
-
-                    except Exception as e:
-                        st.session_state["generated_files"] = []
-                        st.session_state["step3_autogen_done"] = False
-                        status.error("Помилка генерації ❌")
-                        st.error(str(e))
-                    files = st.session_state.get("generated_files") or []
-
-            btn_label = "🔁 Перегенерувати lang.php" if st.session_state.get("generated_files") else "🚀 Згенерувати lang.php"
-            if st.button(btn_label, type="primary"):
-                st.session_state["generated_review"] = None
-                st.session_state["step3_review_autogen_done"] = False
-                st.session_state["review_generation_error"] = None
-                st.session_state["archives_ready"] = False
-
-                start_time = time.time()
-                with st.spinner("🔄 Генерація lang.php…"):
-                    try:
-                        files = generate_lang_files_multi(
-                            template1_bytes=template1_bytes,
-                            template2_bytes=template2_bytes,
-                            template3_bytes=template3_bytes,
-                            domain_templates=st.session_state["domain_templates"],
-                            geo_code=geo_code,
-                            geo_currency=geo_currency,
-                            target_lang=target_lang,
-                            domains=domains,
-                            brand=brand,
-                            model=MODEL,
-                            progress_cb=progress_cb,
-                            geo_defaults=geo,
-                        )
-
-                        duration = round(time.time() - start_time, 2)
-                        st.session_state["generated_files"] = files
-                        st.session_state["last_generation_time"] = duration
-
-                        status.success("Готово ✅")
-                        progress.progress(1.0)
-
-                    except Exception as e:
-                        st.session_state["generated_files"] = []
-                        status.error("Помилка генерації ❌")
-                        st.error(str(e))
+                except Exception as e:
+                    st.error(f"Помилка: {e}")
 
             files = st.session_state.get("generated_files") or []
 
-            if st.session_state.get("last_generation_time"):
-                t = st.session_state["last_generation_time"]
-                st.success(f"⏱ Час генерації: {t} сек")
-
-                if t < 180:
-                    st.caption("🚀 Швидко")
-                elif t < 420:
-                    st.caption("⚡ Нормально")
-                else:
-                    st.caption("🐢 Повільно — можна оптимізувати модель або батч")
-
-            # 📥 Кнопки скачування
             if files:
                 st.divider()
-                st.markdown("### ✅ Скачати файли")
+                st.markdown("### 📥 Завантаження")
 
-                many = len(files) > 1
-
-                # 1) Тільки lang.php
-                st.markdown("#### 1) Тільки lang.php")
+                # --- lang.php ---
+                st.markdown("#### lang.php")
                 for i, item in enumerate(files):
-                    fname = "lang.php" if not many else f"lang_{item['domain']}.php"
                     st.download_button(
-                        label=f"⬇️ Завантажити {fname}",
-                        data=item["content"].encode("utf-8"),
-                        file_name=fname,
-                        mime="text/x-php",
-                        use_container_width=True,
-                        key=f"download_lang_{i}_{item['domain']}",
+                        f"⬇️ {item['domain']}",
+                        data=item["content"].encode(),
+                        file_name=f"{item['domain']}.php",
+                        key=f"lang_{i}"
                     )
 
-                domain_to_langphp = {it["domain"]: it["content"] for it in files}
-
-                # 2) Сайт для кожного домену
-                st.markdown("#### 2) Сайт для кожного домену (архів з папкою домену всередині)")
+                # --- сайти ---
+                st.markdown("#### ZIP сайти")
 
                 TEMPLATE_DIRS = {
-                    "template_1": Path("templates/template_1-1"),
-                    "template_2": Path("templates/template_2"),
-                    "template_3": Path("templates/template_3"),
+                    "template_1": "templates/template_1-1",
+                    "template_2": "templates/template_2",
+                    "template_3": "templates/template_3",
                 }
-                dt = st.session_state.get("domain_templates", {}) or {}
 
-                domain_to_template_dir = {}
-                for i, d in enumerate(domains):
-                    tpl_id = dt.get(d, "template_1")
-                    domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
+                dt = st.session_state.get("domain_templates", {})
 
-                _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
-                _missing = [p for p in _need_dirs if not os.path.isdir(p)]
-                if _missing:
-                    st.error("Не знайдено папки шаблонів: " + ", ".join(_missing))
-                else:
-                    for i, item in enumerate(files):
-                        domain = item["domain"]
-                            # 1 раз ініціалізуємо сховище архівів у session_state
-                        if "generated_site_zips" not in st.session_state:
-                            st.session_state["generated_site_zips"] = {}
-                        
-                        domain_to_template_dir = {}
-                        
-                        for i, d in enumerate(domains):
-                            tpl_id = dt.get(d) or ("template_1" if i % 2 == 0 else "template_2")
-                            domain_to_template_dir[d] = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
-                        
-                        _need_dirs = sorted({str(p) for p in domain_to_template_dir.values() if p})
-                        _missing = [p for p in _need_dirs if not os.path.isdir(p)]
-                        
-                        if _missing:
-                            st.error("Не знайдено папки шаблонів: " + ", ".join(_missing))
-                        else:
-                            for i, item in enumerate(files):
-                                domain = item["domain"]
-                        
-                                try:
-                                    if domain not in st.session_state["generated_site_zips"]:
-                                        st.session_state["generated_site_zips"][domain] = build_domain_site_zip(
-                                            domain=domain,
-                                            site_template_dir=domain_to_template_dir.get(
-                                                domain,
-                                                TEMPLATES["template_1"]["dir"]
-                                            ),
-                                            lang_php_content=item["content"],
-                                            target_lang=target_lang,
-                                            geo_code=geo_code.lower(),
-                                            brand=brand,
-                                        )
-                        
-                                    st.download_button(
-                                        label=f"⬇️ Завантажити сайт для {domain} (.zip)",
-                                        data=st.session_state["generated_site_zips"][domain],
-                                        file_name=f"{domain}.zip",
-                                        mime="application/zip",
-                                        use_container_width=True,
-                                        key=f"download_site_zip_{i}_{domain}",
-                                        on_click="ignore",
-                                    )
-                        
-                                except Exception as e:
-                                    st.warning(f"Не вдалося зібрати сайт для {domain}: {e}")
-                        
-                        st.session_state["archives_ready"] = True
+                if "generated_site_zips" not in st.session_state:
+                    st.session_state["generated_site_zips"] = {}
+
+                for i, item in enumerate(files):
+                    domain = item["domain"]
+
+                    try:
+                        if domain not in st.session_state["generated_site_zips"]:
+                            tpl_id = dt.get(domain, "template_1")
+                            tpl_dir = TEMPLATE_DIRS.get(tpl_id, TEMPLATE_DIRS["template_1"])
+
+                            st.session_state["generated_site_zips"][domain] = build_domain_site_zip(
+                                domain=domain,
+                                site_template_dir=tpl_dir,
+                                lang_php_content=item["content"],
+                                target_lang=target_lang,
+                                geo_code=geo_code.lower(),
+                                brand=brand,
+                            )
+
+                        st.download_button(
+                            f"⬇️ {domain}.zip",
+                            data=st.session_state["generated_site_zips"][domain],
+                            file_name=f"{domain}.zip",
+                            key=f"zip_{i}"
+                        )
+
+                    except Exception as e:
+                        st.warning(f"{domain}: {e}")
+
+                st.session_state["archives_ready"] = True
 
             # --- REVIEW GENERATION ---
             should_autogen_review = (
