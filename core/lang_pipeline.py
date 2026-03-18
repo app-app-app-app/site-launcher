@@ -4,6 +4,7 @@ import re
 import json
 import random
 from typing import Dict, List, Optional, Callable, Tuple
+import time
 
 
 
@@ -1806,5 +1807,6 @@ def generate_lang_files_multi(
                 out.append(files[0])
         except Exception as e:
             print(f"[ERROR] {d}: {e}")
+        time.sleep(1.2)  # 🔥 КРИТИЧНО
 
     return out
