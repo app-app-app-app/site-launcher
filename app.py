@@ -1664,6 +1664,9 @@ elif st.session_state.step == 3:
                     st.error(f"Помилка: {e}")
 
             files = st.session_state.get("generated_files") or []
+            if not files:
+                st.error("❌ Нічого не згенерилось (можливо LLM помилка або rate limit)")
+                st.caption("Можливі причини: timeout, rate limit, помилка LLM")
 
             if files:
                 st.divider()
