@@ -1690,7 +1690,7 @@ def generate_lang_files(
 
             strings, spans = _extract_strings(content)
             if strings:
-                outs = _llm_transform_strings_onepass(client, model, strings, target_lang)
+                outs = _llm_transform_strings_onepass(client, model, strings, target_lang, geo_code)
                 content = _apply_strings(content, spans, outs)
 
             # 2) Тепер override MANUAL змінних — гарантуємо структуру/плейсхолдери
@@ -1788,20 +1788,23 @@ def generate_lang_files_multi(
             tpl = template1_bytes
             tk = "template_1"
 
-        files = generate_lang_files(
-            template_bytes=tpl,
-            geo_code=geo_code,
-            geo_currency=geo_currency,
-            target_lang=target_lang,
-            domains=[d],
-            brand=brand,
-            template_kind=tk,
-            model=model,
-            country_name=country_name,
-            progress_cb=progress_cb,
-        )
+        try:
+            files = generate_lang_files(
+                template_bytes=tpl,
+                geo_code=geo_code,
+                geo_currency=geo_currency,
+                target_lang=target_lang,
+                domains=[d],
+                brand=brand,
+                template_kind=tk,
+                model=model,
+                country_name=country_name,
+                progress_cb=progress_cb,
+            )
 
-        if files:
-            out.append(files[0])
+            if files:
+                out.append(files[0])
+        except Exception as e:
+            print(f"[ERROR] {d}: {e}")
 
     return out
