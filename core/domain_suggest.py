@@ -66,6 +66,10 @@ def generate_domain_candidates(brand: str, ccTLD: Optional[str]) -> List[str]:
         for t in tlds:
             add(f"{b}.{t}")
 
+    # --- official варіанти ---
+    for b in [base_concat, base_hyph]:
+        add(f"{b}-official.com")
+
     if ccTLD:
         add(f"{base_concat}.{ccTLD}")
         add(f"{base_hyph}.{ccTLD}")
