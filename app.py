@@ -1097,6 +1097,8 @@ def _domain_sort_key(domain: str, brand: str, cc_tld: str | None) -> tuple:
                 return (2, hyphen_variant_rank(h))
             if h and host == h and tld == "net":
                 return (3, hyphen_variant_rank(h))
+            if h and host == f"{h}-official" and tld == "com":
+                return (3.5, hyphen_variant_rank(h))
             if cc and h and host == h and tld == cc:
                 return (6, hyphen_variant_rank(h))
             if cc and h and host == f"{h}-{cc}" and tld == "com":
