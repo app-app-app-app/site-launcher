@@ -1672,15 +1672,6 @@ elif st.session_state.step == 3:
                 st.divider()
                 st.markdown("### 📥 Завантаження")
 
-                # --- lang.php ---
-                st.markdown("#### lang.php")
-                for i, item in enumerate(files):
-                    st.download_button(
-                        f"⬇️ {item['domain']}",
-                        data=item["content"].encode(),
-                        file_name=f"{item['domain']}.php",
-                        key=f"lang_{i}"
-                    )
 
                 # --- сайти ---
                 st.markdown("#### ZIP сайти")
