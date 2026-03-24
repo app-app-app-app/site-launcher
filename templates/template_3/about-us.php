@@ -28,6 +28,14 @@ $canonical = 'https://' . $host . $uri;
 <html lang="<?= $site_lang ?>" style="filter: hue-rotate(3deg);">
 
 <head>
+<?php
+$host = $_SERVER['HTTP_HOST'];
+$uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
+
+$canonical = 'https://' . $host . $uri;
+?>
+
+<link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
