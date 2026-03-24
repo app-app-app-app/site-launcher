@@ -255,10 +255,10 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
             <div class="leaders__image">
               <img src="images/Warren_Buffett.webp" width="375" height="375" loading="lazy" alt="avatar">
               <span>
-                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="">
-                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="">
-                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="">
-                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="">
+                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="Digital coin growth">
+                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="Gold coin investment symbol">
+                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="Financial coin market growth">
+                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="Crypto investment AI trading">
               </span>
             </div>
           </div>
@@ -276,10 +276,10 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
             <div class="leaders__image">
               <img src="images/Larry_Fink.webp" width="375" height="375" alt="avatar" style="object-position: 64%;">
               <span>
-                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="">
-                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="">
-                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="">
-                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="">
+                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="Digital coin growth">
+                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="Gold coin investment symbol">
+                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="Financial coin market growth">
+                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="Crypto investment AI trading">
               </span>
             </div>
           </div>
@@ -297,10 +297,10 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
             <div class="leaders__image">
               <img src="images/Jamie_Dimon.webp" width="375" height="375" alt="avatar" style="object-position: 64%;">
               <span>
-                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="">
-                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="">
-                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="">
-                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="">
+                <img class="leaders__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="Digital coin growth">
+                <img class="leaders__image-coin" src="images/coin-3.webp" width="156" height="122" alt="Gold coin investment symbol">
+                <img class="leaders__image-coin" src="images/coin-4.webp" width="82" height="69" alt="Financial coin market growth">
+                <img class="leaders__image-coin" src="images/coin-5.webp" width="91" height="101" alt="Crypto investment AI trading">
               </span>
             </div>
           </div>
@@ -461,11 +461,11 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
       <div class="trades__image">
         <img src="images/laptop.webp" width="490" height="395" alt="laptop">
         <span>
-          <img class="trades__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="">
-          <img class="trades__image-coin" src="images/coin-3.webp" width="156" height="122" alt="">
-          <img class="trades__image-coin" src="images/coin-4.webp" width="82" height="69" alt="">
-          <img class="trades__image-coin" src="images/coin-5.webp" width="91" height="101" alt="">
-          <img class="trades__image-coin visible-tablet" src="images/coin-6.webp" width="58" height="46" alt="">
+          <img class="trades__image-coin visible-tablet" src="images/coin-2.webp" width="50" height="45" alt="Digital coin growth">
+          <img class="trades__image-coin" src="images/coin-3.webp" width="156" height="122" alt="Gold coin investment symbol">
+          <img class="trades__image-coin" src="images/coin-4.webp" width="82" height="69" alt="Financial coin market growth">
+          <img class="trades__image-coin" src="images/coin-5.webp" width="91" height="101" alt="Crypto investment AI trading">
+          <img class="trades__image-coin visible-tablet" src="images/coin-6.webp" width="58" height="46" alt="AI trading coin concept">
         </span>
       </div>
 
