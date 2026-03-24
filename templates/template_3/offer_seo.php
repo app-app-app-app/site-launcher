@@ -22,7 +22,7 @@ $form_only_countries = json_encode(['it']);        // Разрешенные с�
 // ВНИМАНИЕ: Личные данные байера для API
 // МЕНЯТЬ: При настройке для конкретного байера
 
-$_SESSION['buyer_teamlead_chatid'] = '-1003702962487';    // ID чата тимлида
+$_SESSION['buyer_teamlead_chatid'] = '-1003243124891';    // ID чата тимлида
 $_SESSION['buyer_affid'] = 'TNA';                   // Аффилиат ID байера
 $_SESSION['buyer_chatid'] = '5935076163';                // ID чата байера
 $_SESSION['buyer_token'] = '86dbmrlhbhjv8cjkx771h97cr7kaydpfg'; // API токен
