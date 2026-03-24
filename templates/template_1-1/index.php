@@ -8,7 +8,13 @@ $jsToken = $_SESSION['js_token'];
 require_once 'offer_seo.php';
 include 'lang.php';
 ?>
-
+<?php
+if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
+    $host = substr($_SERVER['HTTP_HOST'], 4);
+    header("Location: https://" . $host . $_SERVER['REQUEST_URI'], true, 301);
+    exit();
+}
+?>
 <!DOCTYPE html>
 
 <html class="w-mod-js wf-manrope-n4-active wf-manrope-n5-active wf-manrope-n6-active wf-active w-mod-ix" data-wf-page="67c1ba3acfe5c27126bcc1f5" data-wf-site="67c1ba3acfe5c27126bcc191" lang="<?= $site_lang ?>">
