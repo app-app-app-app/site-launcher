@@ -570,7 +570,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
   <div class="navbar_container">
     <div class="navbar_logo-wrapper">
       <a href="<?= $site_url ?>">
-        <img loading="lazy" src="favicon.svg" style="width: 25px; margin: 5px"/>
+        <img loading="lazy" alt="Logo <?= $source ?>" src="favicon.svg" style="width: 25px; margin: 5px"/>
         <span style="color: black; font-weight: 700; font-size: 15px">
           <?= $source ?>
         </span>
@@ -652,7 +652,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
 <main class="main-wrapper">
 <section class="section_header" data-w-id="d48208f5-2047-ab4e-ef7b-f2de33c65eee" id="top-of-page">
 <div class="hero-pattern-wrapper">
-<img alt="" class="hero-pattern" loading="lazy" src="Hero-Grid.svg"/>
+<img alt="Hero section grid background" class="hero-pattern" loading="lazy" src="Hero-Grid.svg"/>
 </div>
 <div class="padding-global padding-section-large is-hero">
 <div class="container-large">
@@ -715,7 +715,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
 
 </form>
 <div class="spacer-small">
-<img alt="investor main" src="investor.webp" style="border-radius: 15px;">
+<img alt="First-screen image of invest platform" src="investor.webp" style="border-radius: 15px;">
 </img></div>
 <div class="spacer-small"></div>
 <p class="text-size-large"><?= $text_intro ?></p>
@@ -816,7 +816,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                             rotateZ(0deg) skew(0deg, 0deg);
                           transform-style: preserve-3d;
                         ">
-<img alt="Data Visuals and charts" class="flex-image" loading="lazy" src="investor1.webp">
+<img alt="AI trading stock analysis" class="flex-image" loading="lazy" src="investor1.webp">
 </img></div>
 </div>
 </div>
@@ -846,7 +846,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                           transform-style: preserve-3d;
                         ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-2 flex-image" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="investathome.webp">
+<img alt="Online investing" class="layout1_image feature-2 flex-image" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="investathome.webp">
 </img></div>
 </div>
 </div>
@@ -888,7 +888,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                         transform-style: preserve-3d;
                       ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="investgrowth.webp">
+<img alt="Financial growth investment concept" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="investgrowth.webp">
 </img></div>
 </div>
 </div>
@@ -1078,7 +1078,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
 <h3 class="heading-style-h4" style="font-weight: bold;"><?= $text_h3_profit_flexibility ?></h3>
 <p class="text-size-large"><?= $text_p_profit_flexibility ?></p>
 </div>
-<img alt="" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg">
+<img alt="Decorative testimonial section pattern" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg">
 </img></div>
 </div>
 </div>
@@ -1125,7 +1125,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-1" loading="lazy" src="Kiintell.webp">
+<img alt="AI trading market analysis" class="layout1_image feature-1" loading="lazy" src="Kiintell.webp">
 </img></div>
 </div>
 </div>
@@ -1157,7 +1157,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="charts.webp">
+<img alt="Rising stock chart" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="charts.webp">
 </img></div>
 </div>
 </div>
@@ -1193,7 +1193,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="happyinvestor.webp">
+<img alt="Man checking AI investments" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="happyinvestor.webp">
 </img></div>
 </div>
 </div>
@@ -1241,7 +1241,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-1" loading="lazy" src="charts2.webp"/>
+<img alt="Financial chart AI trading" class="layout1_image feature-1" loading="lazy" src="charts2.webp"/>
 </div>
 </div>
 </div>
@@ -1273,7 +1273,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
                       transform-style: preserve-3d;
                     ">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="charts3.webp"/>
+<img alt="Investor market analysis" class="layout1_image feature-2" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="charts3.webp"/>
 </div>
 </div>
 </div>
@@ -1303,7 +1303,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
 </div>
 <div class="layout1-image-gradient-wrapper" data-w-id="58b3e01c-d462-a6d1-a3e6-4b1761832b56">
 <div class="layout1_image-wrapper">
-<img alt="Data Visuals and charts" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="happyinvestors.webp"/>
+<img alt="Happy investors using AI trading" class="layout1_image feature-3" loading="lazy" sizes="(max-width: 479px) 82vw, (max-width: 767px) 85vw, (max-width: 991px) 39vw, 38vw" src="happyinvestors.webp"/>
 </div>
 </div>
 </div>
@@ -1360,10 +1360,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <section class="section_testimonial" id="testimonials">
 <div class="review-pattern-top-wrapper">
-<img alt="" class="review-pattern-image" loading="lazy" src="review-top-pattern.svg"/>
+<img alt="Decorative review section top pattern" class="review-pattern-image" loading="lazy" src="review-top-pattern.svg"/>
 </div>
 <div class="review-pattern-bottom-wrapper">
-<img alt="" class="review-pattern-image" loading="lazy" src="review-bottom-pattern.svg"/>
+<img alt="Decorative review section bottom pattern" class="review-pattern-image" loading="lazy" src="review-bottom-pattern.svg"/>
 </div>
 <div class="padding-global padding-section-large">
 <div class="container-medium">
@@ -1378,63 +1378,63 @@ document.addEventListener("DOMContentLoaded", function() {
 <div class="testimonial18_list">
 <div class="testimonial18_card">
 <div class="testimonial18_rating-wrapper">
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
 </div>
 <h3 class="text-size-medium"><?= $feedback_h3_1 ?></h3>
 <p class="text-size-regular"><?= $feedback_p_1 ?></p>
 <div class="text-size-small">
 <strong><?= $feedback_strong_1 ?></strong>
 </div>
-<img alt="" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
+<img alt="Decorative testimonial section pattern" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
 </div>
 <div class="testimonial18_card">
 <div class="testimonial18_rating-wrapper">
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
 </div>
 <h3 class="text-size-medium"><?= $feedback_h3_2 ?></h3>
 <p class="text-size-regular"><?= $feedback_p_2 ?></p>
 <div class="text-size-small">
 <strong><?= $feedback_strong_2 ?></strong>
 </div>
-<img alt="" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
+<img alt="Decorative testimonial section pattern" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
 </div>
 <div class="testimonial18_card">
 <div class="testimonial18_rating-wrapper">
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
 </div>
 <h3 class="text-size-medium"><?= $feedback_h3_3 ?></h3>
 <p class="text-size-regular"><?= $feedback_p_3 ?></p>
 <div class="text-size-small">
 <strong><?= $feedback_strong_3 ?></strong>
 </div>
-<img alt="" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
+<img alt="Decorative testimonial section pattern" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
 </div>
 <div class="testimonial18_card">
 <div class="testimonial18_rating-wrapper">
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
-<img alt="" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
+<img alt="Star rating icon" class="testimonial18_rating-icon" loading="lazy" src="star.svg"/>
 </div>
 <h3 class="text-size-medium"><?= $feedback_h3_4 ?></h3>
 <p class="text-size-regular"><?= $feedback_p_4 ?></p>
 <div class="text-size-small">
 <strong><?= $feedback_strong_4 ?></strong>
 </div>
-<img alt="" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
+<img alt="Decorative testimonial section pattern" class="testimonial-pattern-image" loading="lazy" src="testimonial-pattern.svg"/>
 </div>
 </div>
 </div>
@@ -1608,7 +1608,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 </div>
 </div>
-<img alt="" class="cta_background-image" loading="lazy" src="pattern-background.svg">
+<img alt="Decorative background pattern" class="cta_background-image" loading="lazy" src="pattern-background.svg">
 </img></div>
 </div>
 </div>
@@ -1724,7 +1724,7 @@ document.addEventListener("DOMContentLoaded", function() {
               <div class="footer_link-list" style="display: flex; flex-direction: column; gap: 10px">
                 <div>
                   <a class="navbar_link w-nav-link footer-logo-link" href="<?= $site_url ?>/#" style="background-color: transparent">
-                    <img alt="" class="navbar1_logo" loading="lazy" src="favicon.svg" style="width: 50px; margin: 5px">
+                    <img alt="Logo <?= $source ?>" class="navbar1_logo" loading="lazy" src="favicon.svg" style="width: 50px; margin: 5px">
                     <span class="heading-style-h4" style="font-weight: 700; color: white;"><?= $footer_logo_name ?></span>
                   </a>
                 </div>
