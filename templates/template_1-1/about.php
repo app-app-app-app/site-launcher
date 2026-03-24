@@ -18,6 +18,14 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
   class="w-mod-js wf-manrope-n4-active wf-manrope-n5-active wf-manrope-n6-active wf-active w-mod-ix">
 
 <head>
+<?php
+$host = $_SERVER['HTTP_HOST'];
+$uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
+
+$canonical = 'https://' . $host . $uri;
+?>
+
+<link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
