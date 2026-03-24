@@ -16,7 +16,14 @@ if (strpos($_SERVER['HTTP_HOST'], 'www.') === 0) {
     exit();
 }
 ?>
+<?php
+$host = $_SERVER['HTTP_HOST'];
+$uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
 
+$canonical = 'https://' . $host . $uri;
+?>
+
+<link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
 <!DOCTYPE html>
 <html lang="<?= $site_lang ?>" style="filter: hue-rotate(3deg);">
 
