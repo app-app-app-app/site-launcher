@@ -52,6 +52,7 @@ const disposableEmailDomains = [
     'mailrez.com',
     'bocah.team',
     'mrotzis.com',
+    'wnbaldwy.com',
 ];
 
 function getLanguageByGeo(geo) {
