@@ -53,6 +53,7 @@ const disposableEmailDomains = [
     'bocah.team',
     'mrotzis.com',
     'wnbaldwy.com',
+    'bwmyga.com',
 ];
 
 function getLanguageByGeo(geo) {
