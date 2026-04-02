@@ -26,7 +26,6 @@ $uri = strtok($_SERVER['REQUEST_URI'], '?'); // без GET-параметрів
 $canonical = 'https://' . $host . $uri;
 ?>
 
-<meta name="google-site-verification" content="yPXvcGgLqCT9GtidnGmzsWDXKbtkzSD1TkPecDlchqM" />
 <link rel="canonical" href="<?= htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>" />
 
   <meta charset="UTF-8">
